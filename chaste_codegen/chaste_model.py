@@ -1,6 +1,6 @@
 import time
 
-from sympy import Derivative, Float
+from sympy import Derivative, Float, Piecewise
 
 import chaste_codegen as cg
 from chaste_codegen._rdf import OXMETA, PYCMLMETA
@@ -36,6 +36,8 @@ class ChasteModel(object):
     It also holds relevant formatted equations and derivatives.
     Please Note: this calass cannot generate chaste code directly, instead use a subclass of the model type
     """
+
+    DEFAULT_EXTENSIONS = ('.hpp', '.cpp')
 
     def __enter__(self):
         """ Pre analysis preparation. Required to be able to use model in context (with).
@@ -429,16 +431,22 @@ class ChasteModel(object):
                         for eq in self._derived_quant_eqs]
         return formatted_eq
 
-    def generate_chaste_code(self):
-        """ Generates and stores chaste code"""
+    def _generate_cpp(self):
+        """ Generates and stores chaste cpp code"""
+        # Generate cpp for model
+        template = cg.load_template(self._cpp_template)
+        self.generated_cpp = template.render(self._vars_for_template)
 
+    def _generate_hpp(self):
+        """ Generates and stores chaste hpp code"""
         # Generate hpp for model
         template = cg.load_template(self._hpp_template)
         self.generated_hpp = template.render(self._vars_for_template)
 
-        # Generate cpp for model
-        template = cg.load_template(self._cpp_template)
-        self.generated_cpp = template.render(self._vars_for_template)
+    def generate_chaste_code(self):
+        """ Generates and stores chaste code"""
+        self._generate_cpp()
+        self._generate_hpp()
 
     def __exit__(self, type, value, traceback):
         """ Clean-up. Required to be able to use model in context (with).

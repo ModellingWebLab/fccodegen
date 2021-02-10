@@ -26,7 +26,8 @@ TRANSLATORS = OrderedDict(
      ('backward-euler', (cg.BackwardEulerModel, 'FromCellMLBackwardEulerNoLut', 'BackwardEulerNoLut', False)),
      ('rush-larsen', (cg.RushLarsenModel, 'FromCellMLRushLarsen', 'RushLarsen', False)),
      ('grl1', (cg.GeneralisedRushLarsenFirstOrderModel, 'FromCellMLGRL1', 'GRL1', False)),
-     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModel, 'FromCellMLGRL2', 'GRL2', False))])
+     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModel, 'FromCellMLGRL2', 'GRL2', False)),
+     ('rush-larsen-labview', (cg.RushLarsenLabview, '', '', False))])
 
 TRANSLATORS_OPT = OrderedDict(
     [('normal', (cg.OptChasteModel, 'FromCellMLOpt', 'Opt', True)),
@@ -41,8 +42,9 @@ TRANSLATORS_WITH_MODIFIERS = tuple('--' + t for t in TRANSLATORS if TRANSLATORS[
 
 
 # Store extensions we can use and how to use them, based on extension of given outfile
-EXTENSION_LOOKUP = {'.cellml': ['.hpp', '.cpp'], '': ['.hpp', '.cpp'], '.cpp': ['.hpp', '.cpp'],
-                    '.hpp': ['.hpp', '.cpp'], '.c': ['.h', '.c'], '.h': ['.h', '.c']}
+EXTENSION_LOOKUP = {'.cellml': None, '': ['.hpp', '.cpp'], '.cpp': ['.hpp', '.cpp'],
+                    '.hpp': ['.hpp', '.cpp'], '.c': ['.h', '.c'], '.h': ['.h', '.c'],
+                    '.txt': ['.h', '.txt'], '.m': ['.h', '.m']}
 
 
 def print_default_lookup_params():
@@ -158,6 +160,11 @@ def process_command_line():
             if args.opt and model_type in TRANSLATORS_OPT:
                 translators.append(TRANSLATORS_OPT[model_type])
 
+    if len(translators) == 0:
+        raise CodegenError('No translator available for ' + str(model_type) + ' opt' if args.opt else '')
+    elif len(translators) > 1 and args.rush_larsen_labview:
+        raise CodegenError('--raise CodegenError cannot be used in combination with other model convertion types')
+
     # An outfile cannot be set with multiple translations
     if args.outfile and len(translators) > 1:
         raise CodegenError("-o cannot be used when multiple model types have been selected!")
@@ -168,7 +175,9 @@ def process_command_line():
 
     if not args.show_outputs:
         # Load model once, not once per translator, but only if we're actually generating code
-        model = load_model_with_conversions(args.cellml_file, use_modifiers=args.modifiers, quiet=args.quiet)
+        # For the labview type don't want to convert stimulus!
+        model = load_model_with_conversions(args.cellml_file, use_modifiers=args.modifiers, quiet=args.quiet,
+                                            skip_conversions=args.rush_larsen_labview)
 
     for translator in translators:
         # Make sure modifiers are only passed to models which can generate them
@@ -177,6 +186,9 @@ def process_command_line():
         translator_class = translator[0]
         outfile_path, model_name_from_file, outfile_base, ext = \
             get_outfile_parts(args.outfile, args.output_dir, args.cellml_file)
+        
+        ext = ext if ext else translator_class.DEFAULT_EXTENSIONS
+
         if args.cls_name is not None:
             args.class_name = args.cls_name
         else:

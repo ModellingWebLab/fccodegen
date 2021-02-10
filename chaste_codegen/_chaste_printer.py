@@ -1,9 +1,11 @@
 from cellmlmanip.printer import Printer
 from sympy import (
     Mul,
+    Piecewise,
     Pow,
     Rational,
     S,
+    Not
 )
 from sympy.core.mul import _keep_coeff
 from sympy.printing import cxxcode
@@ -142,6 +144,10 @@ class ChastePrinter(Printer):
         """ Handles ``float``s. """
         return cxxcode(expr, standard='C++11')
 
+    def _print_ITE(self, expr):
+        """ Handles ITE (if then else) objects by rewriting them as Piecewise """
+        return self._print_Piecewise(expr.rewrite(Piecewise))
+
     def _print_Mul(self, expr):
         """
         Handles multiplication & division, with n terms.
@@ -210,3 +216,7 @@ class ChastePrinter(Printer):
             return a_str
         b_str = ' * '.join(b_str)
         return a_str + ' / ' + (b_str if len(b) == 1 else '(' + b_str + ')')
+
+    def _print_Not(self, expr):
+        """ handles Not(e) """
+        return '!(' + self._print(Not(expr)) + ')'

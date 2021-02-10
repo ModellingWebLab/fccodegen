@@ -20,6 +20,8 @@ _POW_OPT = ReplaceOptim(lambda p: p.is_Pow and (isinstance(p.exp, Float) or isin
                         and float(p.exp).is_integer(),
                         lambda p: Pow(p.base, int(float(p.exp))))
 
+LOG_OPTIMS = (_LOG10_OPT, log1p_opt)
+POW_OPTIMS = (_POW_OPT, )
 
 def optimize_expr_for_c_output(expr):
     """Returns expression optimised for c++ export with regards to powers and logarithms
@@ -29,9 +31,9 @@ def optimize_expr_for_c_output(expr):
     """
     optims = tuple()
     if expr.has(log):
-        optims += (_LOG10_OPT, log1p_opt)
+        optims += LOG_OPTIMS
     if expr.has(Pow):
-        optims += (_POW_OPT, )
+        optims += POW_OPTIMS
     if len(optims) > 0:
         return optimize(expr, optims)
     return expr

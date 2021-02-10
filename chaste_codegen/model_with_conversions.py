@@ -19,6 +19,7 @@ from chaste_codegen import LOGGER, CodegenError
 from chaste_codegen._math_functions import MATH_FUNC_SYMPY_MAPPING
 from chaste_codegen._optimize import optimize_expr_for_c_output
 from chaste_codegen._rdf import OXMETA, PYCMLMETA, get_variables_transitively
+from chaste_codegen._singularity_fixes import fix_singularity_equations
 
 
 MEMBRANE_VOLTAGE_INDEX = 0  # default index for voltage in state vector
@@ -31,18 +32,19 @@ STIM_PARAM_TAGS = (('membrane_stimulus_current_amplitude', 'uA_per_cm2', True),
                    ('membrane_stimulus_current_end', 'millisecond', False))
 
 
-def load_model_with_conversions(model_file, use_modifiers=False, quiet=False):
+def load_model_with_conversions(model_file, use_modifiers=False, quiet=False, fix_singularities=True, skip_conversions=False):
     if quiet:
         LOGGER.setLevel(logging.ERROR)
     try:
         model = cellmlmanip.load_model(model_file)
     except Exception as e:
         raise CodegenError('Could not load cellml model: \n    ' + str(e))
-    add_conversions(model, use_modifiers)
+    if not skip_conversions:
+        add_conversions(model, use_modifiers=use_modifiers, fix_singularities=fix_singularities)
     return model
 
 
-def add_conversions(model, use_modifiers=True):
+def add_conversions(model, use_modifiers=True, fix_singularities=True, skip_chaste_stimulus_conversion=False):
     # We are adding attributes to the model from cellmlmanip. This could break if the api changes
     # The check  below guards against this
     attrs_added = ('conversion_units', 'stimulus_units', 'time_variable', 'state_vars', 'membrane_voltage_var',
@@ -56,8 +58,8 @@ def add_conversions(model, use_modifiers=True):
     model.conversion_units, model.stimulus_units = _add_units(model)
 
     model.membrane_stimulus_current_orig = _get_membrane_stimulus_current(model)
-    model.cytosolic_calcium_concentration_var = _get_cytosolic_calcium_concentration_var(model, convert=False)
-    model.membrane_voltage_var = _get_membrane_voltage_var(model, convert=False)
+    model.cytosolic_calcium_concentration_var = get_cytosolic_calcium_concentration_var(model, convert=False)
+    model.membrane_voltage_var = get_membrane_voltage_var(model, convert=False)
 
     # get dv/dt
     dvdt_symbols = tuple(filter(lambda x: x.args[0] == model.membrane_voltage_var, model.get_derivatives(sort=False)))
@@ -73,20 +75,27 @@ def add_conversions(model, use_modifiers=True):
     model.stimulus_sign = _get_stimulus_sign(model)
 
     # Add conversion rules for working with stimulus current & amplitude
-    _add_conversion_rules(model)
+    if not skip_chaste_stimulus_conversion:
+        _add_conversion_rules(model)
 
     model.time_variable = _get_time_variable(model)
     model.state_vars = set(model.get_state_variables(sort=False))
-    model.membrane_voltage_var = _get_membrane_voltage_var(model)  # apply unit conversions if needed
-    model.cytosolic_calcium_concentration_var = _get_cytosolic_calcium_concentration_var(model)  # apply conversions
+    model.membrane_voltage_var = get_membrane_voltage_var(model)  # apply unit conversions if needed
+    model.cytosolic_calcium_concentration_var = get_cytosolic_calcium_concentration_var(model)  # apply conversions
 
     # Conversions of V or cytosolic_calcium_concentration could have changed the state vars so a new call is needed
     model.state_vars = set(model.get_state_variables(sort=False))
 
     # Retrieve stimulus current parameters so we can exclude these from modifiers etc.
     model.modifiable_parameters = _get_modifiable_parameters(model)
+
+    # Fix singularities if desired
+    if fix_singularities:
+        fix_singularity_equations(model, model.membrane_voltage_var, model.modifiable_parameters)
+
+    # Get Capactiatnce & stimulus parameters
     model.membrane_capacitance = _get_membrane_capacitance(model)
-    model.stimulus_params, model.stimulus_equations = _get_stimulus(model)
+    model.stimulus_params, model.stimulus_equations = _get_stimulus(model, skip_chaste_stimulus_conversion)
 
     # update modifiable_parameters remove stimulus params
     # couldn't do this earlier as we didn't have stimulus params yet
@@ -101,7 +110,7 @@ def add_conversions(model, use_modifiers=True):
 
     model.y_derivatives = _get_y_derivatives(model)
     # Convert currents
-    model.membrane_stimulus_current_converted, model.stimulus_units = _convert_membrane_stimulus_current(model)
+    model.membrane_stimulus_current_converted, model.stimulus_units = _convert_membrane_stimulus_current(model, skip_chaste_stimulus_conversion)
     _convert_other_currents(model)
 
     # Get derivs and eqs
@@ -217,7 +226,7 @@ def _get_time_variable(model):
                             "time needs to be dimensionally equivalent to second!"))
 
 
-def _get_membrane_voltage_var(model, convert=True):
+def get_membrane_voltage_var(model, convert=True):
     """ Find the membrane_voltage variable"""
     try:
         # Get and convert V
@@ -235,7 +244,7 @@ def _get_membrane_voltage_var(model, convert=True):
     return voltage
 
 
-def _get_cytosolic_calcium_concentration_var(model, convert=True):
+def get_cytosolic_calcium_concentration_var(model, convert=True):
     """ Find the cytosolic_calcium_concentration variable if it exists"""
     try:
         calcium = model.get_variable_by_ontology_term((OXMETA, 'cytosolic_calcium_concentration'))
@@ -285,25 +294,26 @@ def _get_membrane_capacitance(model):
         return None
 
 
-def _get_stimulus(model):
+def _get_stimulus(model, skip_chaste_stimulus_conversion):
     """ Store the stimulus currents in the model"""
-    stim_params_orig, stim_params = set(), set()
-    try:  # Get required stimulus parameters
-        for tag, unit, required in STIM_PARAM_TAGS:
-            param = model.get_variable_by_ontology_term((OXMETA, tag))
-            stim_params_orig.add(param)  # originals ones
-            stim_params.add(model.convert_variable(param, model.conversion_units.get_unit(unit),
-                                                   DataDirectionFlow.INPUT))
-    except KeyError:
-        if required:  # Optional params are allowed to be missing
-            LOGGER.info('The model has no default stimulus params tagged.')
-            return set(), []
-    except TypeError as e:
-        if str(e) == "unsupported operand type(s) for /: 'HeartConfig::Instance()->GetCapacitance' and 'NoneType'":
-            e = CodegenError("Membrane capacitance is required to be able to apply conversion to stimulus current!")
-        raise(e)
+    stim_params_orig, stim_params, return_stim_eqs = set(), set(), set()
+    if not skip_chaste_stimulus_conversion:
+        try:  # Get required stimulus parameters
+            for tag, unit, required in STIM_PARAM_TAGS:
+                param = model.get_variable_by_ontology_term((OXMETA, tag))
+                stim_params_orig.add(param)  # originals ones
+                stim_params.add(model.convert_variable(param, model.conversion_units.get_unit(unit),
+                                                       DataDirectionFlow.INPUT))
+        except KeyError:
+            if required:  # Optional params are allowed to be missing
+                LOGGER.info('The model has no default stimulus params tagged.')
+                return set(), []
+        except TypeError as e:
+            if str(e) == "unsupported operand type(s) for /: 'HeartConfig::Instance()->GetCapacitance' and 'NoneType'":
+                e = CodegenError("Membrane capacitance is required to be able to apply conversion to stimulus current!")
+            raise(e)
 
-    return_stim_eqs = get_equations_for(model, stim_params, filter_modifiable_parameters_lhs=False)
+        return_stim_eqs = get_equations_for(model, stim_params, filter_modifiable_parameters_lhs=False)
     return stim_params | stim_params_orig, return_stim_eqs
 
 
@@ -364,9 +374,9 @@ def _stimulus_sign(model, expr_to_check, equations, stimulus_current=None):
     return - 1 if expr_to_check > 0 else 1
 
 
-def _convert_membrane_stimulus_current(model):
+def _convert_membrane_stimulus_current(model, skip_chaste_stimulus_conversion):
     """ Find the membrane_stimulus_current and convert it to uA_per_cm2, using GetIntracellularAreaStimulus"""
-    if model.membrane_stimulus_current_orig is None:
+    if model.membrane_stimulus_current_orig is None or skip_chaste_stimulus_conversion:
         return None, model.stimulus_units
 
     membrane_stimulus_current_converted = model.convert_variable(model.membrane_stimulus_current_orig,
@@ -473,8 +483,12 @@ def _get_ionic_vars(model):
     ionic_vars = model.get_variables_by_rdf((PYCMLMETA, 'ionic-current_chaste_codegen'), 'yes')
     # convert and sum up all lhs for all ionic equations
     for var in reversed(ionic_vars):
-        factor = model.units.get_conversion_factor(from_unit=model.units.evaluate_units(var),
-                                                   to_unit=model.conversion_units.get_unit('uA_per_cm2'))
+        try:
+            factor = model.units.get_conversion_factor(from_unit=model.units.evaluate_units(var),
+                                                       to_unit=model.conversion_units.get_unit('uA_per_cm2'))
+        except DimensionalityError:
+            factor = 1
+
         i_ionic_rhs += factor * var
     i_ionic_rhs = simplify(i_ionic_rhs * model.ionic_stimulus_sign)  # clean up equation
 
