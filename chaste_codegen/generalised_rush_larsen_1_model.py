@@ -12,10 +12,10 @@ class GeneralisedRushLarsenFirstOrderModel(ChasteModel):
 
     def __init__(self, model, file_name, **kwargs):
         super().__init__(model, file_name, **kwargs)
-        self._hpp_template = 'generalised_rush_larsen_model.hpp'
-        self._cpp_template = 'generalised_rush_larsen_model_1.cpp'
         self._vars_for_template['base_class'] = 'AbstractGeneralizedRushLarsenCardiacCell'
         self._vars_for_template['model_type'] = 'GeneralizedRushLarsenFirstOrder'
+        self._templates = ['generalised_rush_larsen_model_1.cpp', 'generalised_rush_larsen_model.hpp']
+
         self._jacobian_equations, self._jacobian_matrix = self._get_jacobian()
 
         self._vars_for_template['jacobian_equations'], self._vars_for_template['jacobian_entries'] = \

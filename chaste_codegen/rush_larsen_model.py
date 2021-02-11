@@ -13,10 +13,9 @@ class RushLarsenModel(ChasteModel):
 
     def __init__(self, model, file_name, **kwargs):
         super().__init__(model, file_name, **kwargs)
-        self._hpp_template = 'rush_larsen_model.hpp'
-        self._cpp_template = 'rush_larsen_model.cpp'
         self._vars_for_template['base_class'] = 'AbstractRushLarsenCardiacCell'
         self._vars_for_template['model_type'] = 'RushLarsen'
+        self._templates = ['rush_larsen_model.cpp', 'rush_larsen_model.hpp']
 
         self._get_non_linear_state_vars()
 
@@ -30,6 +29,9 @@ class RushLarsenModel(ChasteModel):
         self._non_linear_state_vars = \
             get_non_linear_state_vars(derivative_equations, self._model.membrane_voltage_var,
                                       self._model.state_vars)
+
+    def _format_derivative_alpha_beta(self, deriv):
+        return {'type': 'non_linear', 'deriv': self._printer.doprint(deriv)}
 
     def _get_formatted_alpha_beta(self):
         """Gets the information for r_alpha_or_tau, r_beta_or_inf in the c++ output and formatted equations
@@ -84,7 +86,7 @@ class RushLarsenModel(ChasteModel):
                                               'r_beta_or_inf': self._printer.doprint(r_beta_or_inf)})
                 vars_in_derivative_alpha_beta.update(r_alpha_or_tau.free_symbols | r_beta_or_inf.free_symbols)
             else:
-                derivative_alpha_beta.append({'type': 'non_linear', 'deriv': self._printer.doprint(deriv)})
+                derivative_alpha_beta.append(self._format_derivative_alpha_beta(deriv))
                 vars_in_derivative_alpha_beta.add(deriv)
 
         deriv_eqs_EvaluateEquations = get_equations_for(self._model, vars_in_derivative_alpha_beta)

@@ -32,7 +32,8 @@ STIM_PARAM_TAGS = (('membrane_stimulus_current_amplitude', 'uA_per_cm2', True),
                    ('membrane_stimulus_current_end', 'millisecond', False))
 
 
-def load_model_with_conversions(model_file, use_modifiers=False, quiet=False, fix_singularities=True, skip_conversions=False):
+def load_model_with_conversions(model_file, use_modifiers=False, quiet=False, fix_singularities=True,
+                                skip_conversions=False):
     if quiet:
         LOGGER.setLevel(logging.ERROR)
     try:
@@ -45,6 +46,7 @@ def load_model_with_conversions(model_file, use_modifiers=False, quiet=False, fi
 
 
 def add_conversions(model, use_modifiers=True, fix_singularities=True, skip_chaste_stimulus_conversion=False):
+
     # We are adding attributes to the model from cellmlmanip. This could break if the api changes
     # The check  below guards against this
     attrs_added = ('conversion_units', 'stimulus_units', 'time_variable', 'state_vars', 'membrane_voltage_var',
@@ -57,7 +59,7 @@ def add_conversions(model, use_modifiers=True, fix_singularities=True, skip_chas
     # Add units needed for conversions
     model.conversion_units, model.stimulus_units = _add_units(model)
 
-    model.membrane_stimulus_current_orig = _get_membrane_stimulus_current(model)
+    model.membrane_stimulus_current_orig = get_membrane_stimulus_current(model)
     model.cytosolic_calcium_concentration_var = get_cytosolic_calcium_concentration_var(model, convert=False)
     model.membrane_voltage_var = get_membrane_voltage_var(model, convert=False)
 
@@ -110,7 +112,8 @@ def add_conversions(model, use_modifiers=True, fix_singularities=True, skip_chas
 
     model.y_derivatives = _get_y_derivatives(model)
     # Convert currents
-    model.membrane_stimulus_current_converted, model.stimulus_units = _convert_membrane_stimulus_current(model, skip_chaste_stimulus_conversion)
+    model.membrane_stimulus_current_converted, model.stimulus_units = \
+        _convert_membrane_stimulus_current(model, skip_chaste_stimulus_conversion)
     _convert_other_currents(model)
 
     # Get derivs and eqs
@@ -261,7 +264,7 @@ def get_cytosolic_calcium_concentration_var(model, convert=True):
     return calcium
 
 
-def _get_membrane_stimulus_current(model):
+def get_membrane_stimulus_current(model):
     """ Find the membrane_stimulus_current variable if it exists"""
     try:  # get membrane_stimulus_current
         return model.get_variable_by_ontology_term((OXMETA, 'membrane_stimulus_current'))

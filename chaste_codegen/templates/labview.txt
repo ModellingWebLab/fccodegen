@@ -19,39 +19,46 @@ float64 dY[{{state_vars | length +1}}];
 float64 Vmem;
 float64 time;
 
-// Parameters
-{%- for param in modifiable_parameters %}
-{{param["comment_name"]}} = {{param["initial_value"]}}; // [{{param["units"]}}]{%- endfor %}
-
-// State variables
-{%- for state_var in state_vars %}
-float64 {{ state_var.var }} = Y[{{loop.index0}}]; // Units: {{state_var.units}}; Initial value: {{state_var.initial_value}}
+//---------------------------------------------------------------------------
+// State Variables
+//---------------------------------------------------------------------------
+{% for state_var in state_vars %}
+// {{loop.index0}}: {{state_var.var}} ({{state_var.units}}) (in {{components[loop.index0]}})
 {%- endfor %}
-{%if free_variable.var_name !='time'%}float64 {%endif%}{{free_variable.var_name}} = Y[{{state_vars | length}}]; // Units: milliecond
-        
+// {{state_vars|length}}: {{free_variable.name}} ({{free_variable.units}})
+
+//---------------------------------------------------------------------------
+// Constants
+//---------------------------------------------------------------------------
+{% for param in modifiable_parameters %}
+float64 {{param.comment_name}} = {{param.initial_value}}; // {{param.units}} (in {{param.component}}){%- endfor %}
+
+{% for deriv in derivative_alpha_beta_eqs %}
+{%- if deriv.is_constant%}float64 {{deriv.lhs}} = {{deriv.rhs}}; // {{deriv.units}} (in {{deriv.component}})
+{% endif %}{%- endfor %}
+//------------------------------------------------------------------------------
+// Computed variables
+//------------------------------------------------------------------------------
+
+{% for deriv in derivative_alpha_beta_eqs %}
+{%- if not deriv.is_constant and not deriv.lhs_is_sv%}float64 {{deriv.lhs}}; // {{deriv.units}} (in {{deriv.component}})
+{% endif %}{%- endfor %}
+
 //---------------------------------------------------------------------------
 // Computation
 //---------------------------------------------------------------------------
-{%- for deriv in derivative_alpha_beta_eqs %}
+{% for deriv in derivative_alpha_beta_eqs %}
+{%-if not deriv.is_constant%}
 {%- if deriv.is_piecewise%}
-
-float64 {{deriv.lhs}}; // {{deriv.units}}
 {%- for expr_conds in deriv.pw_expr_conds %}
 {% if expr_conds[1] == 'true' or loop.index0 != 0%}else {% endif %}{% if expr_conds[1] != 'true'%}if ({{expr_conds[1]}}){%- endif %}
 {{deriv.lhs}} = {{expr_conds[0]}}
 {%- endfor %}
 {% else %}
-float64 {{deriv.lhs}} = {{deriv.rhs}}; // {{deriv.units}}
+{{deriv.lhs}} = {{deriv.rhs}}; // {{deriv.units}}
+{%- endif %}
 {%- endif %}
 {%- endfor %}
-
-
-// Update state vars
-{%- for state_var in state_vars %}
-Y[{{loop.index0}}] = {{ state_var.var }};
-{%- endfor %}
-Y[{{state_vars | length}}] = {{free_variable.var_name}};
-
 //------------------------------------------------------------------------------
 // Integration & Output
 //------------------------------------------------------------------------------

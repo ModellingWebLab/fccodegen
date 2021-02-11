@@ -18,7 +18,7 @@ cached_models = {}
 
 
 def cache_model(model_name):
-    return cached_models.setdefault(model_name, load_model_with_conversions(model_name))
+    return cached_models.setdefault(model_name, load_model_with_conversions(model_name, fix_singularities=True))
 
 
 @pytest.fixture(scope='session')
@@ -106,14 +106,10 @@ def compare_model_against_reference(chaste_model, tmp_path, expected_hpp_path, e
     tmp_path = str(tmp_path)
     # Compare against reference
     # Write generated files
-    hhp_gen_file_path = os.path.join(tmp_path, chaste_model.file_name + ".hpp")
-    cpp_gen_file_path = os.path.join(tmp_path, chaste_model.file_name + ".cpp")
-    write_file(hhp_gen_file_path, chaste_model.generated_hpp)
-    write_file(cpp_gen_file_path, chaste_model.generated_cpp)
-
-    # Compare converted files vs reference
-    compare_file_against_reference(hhp_gen_file_path, expected_hpp_path)
-    compare_file_against_reference(cpp_gen_file_path, expected_cpp_path)
+    for ext, code in zip(chaste_model.DEFAULT_EXTENSIONS, chaste_model.generated_code):
+        gen_file_path = os.path.join(tmp_path, chaste_model.file_name + ext)
+        write_file(gen_file_path, code)
+        compare_file_against_reference(gen_file_path, expected_cpp_path.replace('.cpp', ext))
 
 
 def compare_file_against_reference(file, reference):

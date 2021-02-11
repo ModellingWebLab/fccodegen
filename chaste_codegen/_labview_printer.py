@@ -1,14 +1,5 @@
-from cellmlmanip.printer import Printer
-from sympy import (
-    Mul,
-    Pow,
-    Rational,
-    S,
-    Not
-)
-from sympy.core.mul import _keep_coeff
-from sympy.printing import cxxcode
-from sympy.printing.precedence import precedence
+from sympy import Not
+
 from chaste_codegen._chaste_printer import ChastePrinter
 
 

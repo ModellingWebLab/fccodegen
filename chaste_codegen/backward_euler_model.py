@@ -22,6 +22,8 @@ class BackwardEulerModel(ChasteModel):
         super().__init__(model, file_name, **kwargs)
         self._hpp_template = 'backward_euler_model.hpp'
         self._cpp_template = 'backward_euler_model.cpp'
+        self._templates = ['backward_euler_model.cpp', 'backward_euler_model.hpp']
+
         self._vars_for_template['base_class'] = 'AbstractBackwardEulerCardiacCell'
         self._vars_for_template['model_type'] = 'BackwardEuler'
 

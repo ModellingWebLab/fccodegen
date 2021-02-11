@@ -42,9 +42,9 @@ TRANSLATORS_WITH_MODIFIERS = tuple('--' + t for t in TRANSLATORS if TRANSLATORS[
 
 
 # Store extensions we can use and how to use them, based on extension of given outfile
-EXTENSION_LOOKUP = {'.cellml': None, '': ['.hpp', '.cpp'], '.cpp': ['.hpp', '.cpp'],
-                    '.hpp': ['.hpp', '.cpp'], '.c': ['.h', '.c'], '.h': ['.h', '.c'],
-                    '.txt': ['.h', '.txt'], '.m': ['.h', '.m']}
+EXTENSION_LOOKUP = {'.cellml': None, '': ('.cpp', '.hpp'), '.cpp': ('.cpp', '.hpp'),
+                    '.hpp': ('.cpp', '.hpp'), '.c': ('.c', '.h', '.txt'), '.h': ('.c', '.h', '.txt'),
+                    '.txt': ('.c', '.h', '.txt')}
 
 
 def print_default_lookup_params():
@@ -88,11 +88,12 @@ def process_command_line():
     group.add_argument('--output-dir', action='store', help="directory to place output files in", default=None)
     group.add_argument('--show-outputs', action='store_true', default=False,
                        help="don't actually generate code, just show what files would be generated, one per line")
-
     group.add_argument('-c', default=None, dest='cls_name',
                        help='explicitly set the name of the generated class')
     group.add_argument('-q', '--quiet', action='store_true', default=False,
                        help="quiet operation, don't print informational messages to screen")
+    group.add_argument('--skip-ingularity-fixes', action='store_true', default=False,
+                       help="skip singularity fixes in Goldman-Hodgkin-Katz (GHK) equations.")
 
     group = parser.add_argument_group('Chaste options', description='Options specific to Chaste code output')
     group.add_argument('-y', '--dll', '--dynamically-loadable', dest='dynamically_loadable',
@@ -177,6 +178,7 @@ def process_command_line():
         # Load model once, not once per translator, but only if we're actually generating code
         # For the labview type don't want to convert stimulus!
         model = load_model_with_conversions(args.cellml_file, use_modifiers=args.modifiers, quiet=args.quiet,
+                                            fix_singularities=not args.skip_ingularity_fixes,
                                             skip_conversions=args.rush_larsen_labview)
 
     for translator in translators:
@@ -186,7 +188,7 @@ def process_command_line():
         translator_class = translator[0]
         outfile_path, model_name_from_file, outfile_base, ext = \
             get_outfile_parts(args.outfile, args.output_dir, args.cellml_file)
-        
+
         ext = ext if ext else translator_class.DEFAULT_EXTENSIONS
 
         if args.cls_name is not None:
@@ -199,18 +201,18 @@ def process_command_line():
             outfile_base += translator[2]
 
         # generate code Based on parameters a different class of translator may be used
-        hpp_gen_file_path = os.path.join(outfile_path, outfile_base + ext[0])
-        cpp_gen_file_path = os.path.join(outfile_path, outfile_base + ext[1])
-        if args.show_outputs:
-            print(cpp_gen_file_path)
-            print(hpp_gen_file_path)
-        else:
-            with translator_class(model, outfile_base, header_ext=ext[0], **vars(args)) as chaste_model:
-                chaste_model.generate_chaste_code()
+        get_files = []
+        for ex in ext:
+            get_files.append(os.path.join(outfile_path, outfile_base + ex))
 
-                # Write generated files
-                write_file(hpp_gen_file_path, chaste_model.generated_hpp)
-                write_file(cpp_gen_file_path, chaste_model.generated_cpp)
+        if args.show_outputs:
+            for file in get_files:
+                print(file)
+        else:
+            with translator_class(model, outfile_base, header_ext=ext[1], **vars(args)) as chaste_model:
+                chaste_model.generate_chaste_code()
+                for file, code in zip(get_files, chaste_model.generated_code):
+                    write_file(file, code)
 
 
 def get_outfile_parts(outfile, output_dir, cellml_file):
