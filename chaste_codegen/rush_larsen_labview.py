@@ -111,7 +111,8 @@ class RushLarsenLabview(RushLarsenModel):
             if eq.has(Piecewise):
                 if eq.rhs.has(Piecewise) and (not isinstance(eq.rhs, Piecewise) or len(eq.rhs.atoms(Piecewise)) > 1):
                     new_rhs = eq.rhs
-                    for i, pw in enumerate(eq.rhs.atoms(Piecewise)):
+                    # sort the piecewsies to guarantee consistent output across re-runs
+                    for i, pw in sorted(eq.rhs.atoms(Piecewise), key=str):
                         new_pw_lhs = model.add_variable(eq.lhs.name + '_PW_' + str(i), eq.lhs.units)
                         model.add_equation(Eq(new_pw_lhs, pw))
                         new_rhs = new_rhs.replace(pw, new_pw_lhs)

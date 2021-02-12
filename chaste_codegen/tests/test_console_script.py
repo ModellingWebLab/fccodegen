@@ -780,7 +780,7 @@ def test_script_RL_labview_opt(caplog):
     model_file = os.path.join(CELLML_FOLDER, model_name + '.cellml')
     assert os.path.isfile(model_file)
     # Call commandline script
-    testargs = ['chaste_codegen', model_file, '--rush-larsen-labview', '--opt', '-o', 'bla.c']
+    testargs = ['chaste_codegen', model_file, '--rush-larsen-labview', '--opt', '-o', 'aslanidi_model_2009.c']
     with mock.patch.object(sys, 'argv', testargs):
         chaste_codegen()
     assert 'ERROR' in caplog.text
@@ -794,7 +794,7 @@ def test_script_RL_labview_double_type(caplog):
     model_file = os.path.join(CELLML_FOLDER, model_name + '.cellml')
     assert os.path.isfile(model_file)
     # Call commandline script
-    testargs = ['chaste_codegen', model_file, '--rush-larsen-labview', '--cvode', '-o', 'bla.c']
+    testargs = ['chaste_codegen', model_file, '--rush-larsen-labview', '--cvode', '-o', 'aslanidi_model_2009.c']
     with mock.patch.object(sys, 'argv', testargs):
         chaste_codegen()
     assert 'ERROR' in caplog.text
