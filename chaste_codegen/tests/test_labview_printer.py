@@ -27,7 +27,7 @@ class TestChastePrinter(object):
 
     @pytest.fixture(scope="class")
     def printer(self):
-        return cg.ChastePrinter()
+        return cg.LabviewPrinter()
 
     @pytest.fixture(scope="class")
     def x(self):
@@ -42,9 +42,9 @@ class TestChastePrinter(object):
         return sp.symbols('z')
 
     def test_not(self, printer, x, y, z):
-        assert printer.doprint(sp.Not(x)) == '!(x)'
-        assert printer.doprint(sp.Not(sp.Eq(x, y))) == 'x != y'
-        assert printer.doprint(sp.Not(sp.Eq(x, y) | sp.Eq(x, z))) == '!((x == y) || (x == z))'
+        assert printer.doprint(sp.Not(x)) == '~(x)'
+        assert printer.doprint(sp.Not(sp.Eq(x, y))) == 'x ~= y'
+        assert printer.doprint(sp.Not(sp.Eq(x, y) | sp.Eq(x, z))) == '~((x == y) || (x == z))'
 
     def test_and(self, printer, x, y):
         assert printer.doprint(sp.sympify('x & y')) == '(x) && (y)'
@@ -72,9 +72,9 @@ class TestChastePrinter(object):
         assert printer.doprint(conditionalexp_r) == '((x > 0) ? (0) : ((x > 1) ? (1) : (2)))'
 
     def testabs_(self, printer, x, y):
-        assert printer.doprint(sp.Abs(x + y)) == 'fabs(x + y)'
-        assert printer.doprint(sp.Abs(sp.Float('3.2', 17), evaluate=False)) == 'fabs(3.2000000000000002)'
-        assert printer.doprint(sp.Abs(-3, evaluate=False)) == 'fabs(-3)'
+        assert printer.doprint(sp.Abs(x + y)) == 'abs(x + y)'
+        assert printer.doprint(sp.Abs(sp.Float('3.2', 17), evaluate=False)) == 'abs(3.2000000000000002)'
+        assert printer.doprint(sp.Abs(-3, evaluate=False)) == 'abs(-3)'
 
     def test_trig_functions(self, printer, x):
         # Trig functions
@@ -116,7 +116,7 @@ class TestChastePrinter(object):
         assert printer.doprint(exp_(x)) == 'exp(x)'
         assert printer.doprint(sin_(x)) == 'sin(x)'
         assert printer.doprint(sqrt_(x)) == 'sqrt(x)'
-        assert printer.doprint(abs_(x)) == 'fabs(x)'
+        assert printer.doprint(abs_(x)) == 'abs(x)'
 
     def test_numbers(self, printer, x):
         # Number types
@@ -132,8 +132,8 @@ class TestChastePrinter(object):
         assert printer.doprint(sp.Rational(5, 7)) == '5 / 7'  # Sympy rational
 
         # Special numbers
-        assert printer.doprint(sp.pi) == 'M_PI'
-        assert printer.doprint(sp.E) == 'e'
+        assert printer.doprint(sp.pi) == 'pi'
+        assert printer.doprint(sp.E) == 'exp(1)'
 
     def test_unsupported_function(self, printer, x):
         f = sp.Function('f')

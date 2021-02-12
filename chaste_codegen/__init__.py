@@ -17,6 +17,7 @@ from ._config import (  # noqa
     __version_int__,
     version,
 )
+from ._labview_printer import LabviewPrinter  # noqa
 from ._load_template import load_template  # noqa
 #
 # Load and expose public classes and functions

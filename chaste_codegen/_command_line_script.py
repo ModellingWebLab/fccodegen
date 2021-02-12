@@ -164,7 +164,7 @@ def process_command_line():
     if len(translators) == 0:
         raise CodegenError('No translator available for ' + str(model_type) + ' opt' if args.opt else '')
     elif len(translators) > 1 and args.rush_larsen_labview:
-        raise CodegenError('--raise CodegenError cannot be used in combination with other model convertion types')
+        raise CodegenError('--rush-larsen-labview cannot be used in combination with other model convertion types')
 
     # An outfile cannot be set with multiple translations
     if args.outfile and len(translators) > 1:
