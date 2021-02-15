@@ -218,5 +218,4 @@ class ChastePrinter(Printer):
         return a_str + ' / ' + (b_str if len(b) == 1 else '(' + b_str + ')')
 
     def _print_Not(self, expr):
-        """ handles Not(e) """
         return '!(' + self._print(Not(expr)) + ')'

@@ -1,7 +1,7 @@
 //===========================================================================
 // This source file was generated from CellML by chaste_codegen version (version omitted as unimportant)
 //
-// Model: aslanidi_model_2009
+// Model: aslanidi_2009
 //
 // Processed by chaste_codegen: https://github.com/ModellingWebLab/chaste-codegen
 //     (translator: chaste_codegen, model type: RushLarsenLabview)
@@ -11,7 +11,7 @@
 //===========================================================================
 
 
-#include "aslanidi_model_2009.h"
+#include "aslanidi_2009.h"
 
 //------------------------------------------------------------------------------
 
@@ -25,38 +25,39 @@
 double Y[_NB_OF_STATE_VARIABLES_];
 double dY[_NB_OF_STATE_VARIABLES_];
 // 0: V (millivolt) (in membrane)
-// 1: m (dimensionless) (in sodium_current_m_gate)
-// 2: h1 (dimensionless) (in sodium_current_h1_gate)
-// 3: h2 (dimensionless) (in sodium_current_h2_gate)
-// 4: d_L (dimensionless) (in L_type_Ca_channel_d_L_gate)
-// 5: f_L (dimensionless) (in L_type_Ca_channel_f_L_gate)
-// 6: d_T (dimensionless) (in T_type_Ca_channel_d_T_gate)
-// 7: f_T (dimensionless) (in T_type_Ca_channel_f_T_gate)
-// 8: r (dimensionless) (in Ca_independent_transient_outward_K_current_r_gate)
-// 9: s1 (dimensionless) (in Ca_independent_transient_outward_K_current_s1_gate)
-// 10: s2 (dimensionless) (in Ca_independent_transient_outward_K_current_s2_gate)
-// 11: s3 (dimensionless) (in Ca_independent_transient_outward_K_current_s3_gate)
-// 12: z (dimensionless) (in delayed_rectifier_K_current_z_gate)
-// 13: p_a (dimensionless) (in delayed_rectifier_K_current_pa_gate)
-// 14: p_i (dimensionless) (in delayed_rectifier_K_current_pi_gate)
-// 15: Na_i (millimolar) (in intracellular_ion_concentrations)
-// 16: Ca_i (millimolar) (in intracellular_ion_concentrations)
-// 17: K_i (millimolar) (in intracellular_ion_concentrations)
-// 18: O_C (dimensionless) (in intracellular_Ca_buffering)
-// 19: O_TC (dimensionless) (in intracellular_Ca_buffering)
-// 20: O_TMgC (dimensionless) (in intracellular_Ca_buffering)
-// 21: O_TMgMg (dimensionless) (in intracellular_Ca_buffering)
-// 22: K_c (millimolar) (in cleft_space_ion_concentrations)
-// 23: Ca_rel (millimolar) (in Ca_handling_by_the_SR)
-// 24: Ca_up (millimolar) (in Ca_handling_by_the_SR)
-// 25: O_Calse (dimensionless) (in Ca_handling_by_the_SR)
-// 26: F1 (dimensionless) (in Ca_handling_by_the_SR)
-// 27: F2 (dimensionless) (in Ca_handling_by_the_SR)
-// 28: F3 (dimensionless) (in Ca_handling_by_the_SR)
+// 1: Ca_i (millimolar) (in Ca_i)
+// 2: m (dimensionless) (in i_Na_m_gate)
+// 3: h (dimensionless) (in i_Na_h_gate)
+// 4: j (dimensionless) (in i_Na_j_gate)
+// 5: m_L (dimensionless) (in i_Na_L_m_L_gate)
+// 6: h_L (dimensionless) (in i_Na_L_h_L_gate)
+// 7: d (dimensionless) (in i_Ca_L_d_gate)
+// 8: f (dimensionless) (in i_Ca_L_f_gate)
+// 9: f2 (dimensionless) (in i_Ca_L_f2_gate)
+// 10: f_Ca (dimensionless) (in i_Ca_L_f_Ca_gate)
+// 11: f_Ca2 (dimensionless) (in i_Ca_L_f_Ca2_gate)
+// 12: b (dimensionless) (in i_Ca_T_b_gate)
+// 13: g (dimensionless) (in i_Ca_T_g_gate)
+// 14: a (dimensionless) (in i_to_1_a_gate)
+// 15: i (dimensionless) (in i_to_1_i_gate)
+// 16: i2 (dimensionless) (in i_to_1_i2_gate)
+// 17: xr (dimensionless) (in i_Kr_xr_gate)
+// 18: xs1 (dimensionless) (in i_Ks_xs1_gate)
+// 19: xs2 (dimensionless) (in i_Ks_xs2_gate)
+// 20: a (dimensionless) (in i_to_2_a_gate)
+// 21: Na_i (millimolar) (in intracellular_ion_concentrations)
+// 22: Cl_i (millimolar) (in intracellular_ion_concentrations)
+// 23: K_i (millimolar) (in intracellular_ion_concentrations)
+// 24: Ca_MK_trap (dimensionless) (in Ca_MK_act)
+// 25: Ca_NSR (millimolar) (in Ca_NSR)
+// 26: Ca_JSR (millimolar) (in Ca_JSR)
+// 27: Ca_r (millimolar) (in Ca_r)
+// 28: ri (dimensionless) (in q_rel_ri_gate)
+// 29: ro (dimensionless) (in q_rel_ro_gate)
 
-char YNames[_NB_OF_STATE_VARIABLES_][8];
+char YNames[_NB_OF_STATE_VARIABLES_][11];
 char YUnits[_NB_OF_STATE_VARIABLES_][14];
-char YComponents[_NB_OF_STATE_VARIABLES_][51];
+char YComponents[_NB_OF_STATE_VARIABLES_][33];
 
 //------------------------------------------------------------------------------
 // Constants
@@ -72,181 +73,227 @@ double Scale_bck; // dimensionless (in Scale_bc)
 double Scaling; // dimensionless (in Scalin)
 double k_bck; // one_over_millivolt (in k_bc)
 double leak_comp_perc; // dimensionless (in leak_comp_per)
-double Cm; // nanoF (in membrane)
-double stim_amplitude; // picoA (in membrane)
-double stim_duration; // second (in membrane)
-double stim_start; // second (in membrane)
-double stim_period; // second (in membrane)
+double q_leak_max; // millimolar_per_millisecond (in q_leak)
+double g_rel_max; // per_millisecond (in q_rel)
+double q_up_max; // millimolar_per_millisecond (in q_up)
+double conc_clamp; // dimensionless (in intracellular_ion_concentrations)
+double Ca_o; // millimolar (in model_parameters)
+double K_o; // millimolar (in model_parameters)
+double Na_o; // millimolar (in model_parameters)
+double g_Ca_L; // dimensionless (in i_Ca_L)
+double g_Na; // milliS_per_microF (in i_Na)
+double perc_reduced_inact_for_IpNa; // dimensionless (in i_Na)
+double shift_INa_inact; // millivolt (in i_Na)
+double g_K1_max; // milliS_per_microF (in i_K1)
+double g_Kr_max; // milliS_per_microF (in i_Kr)
+double g_Ks_max; // milliS_per_microF (in i_Ks)
+double i_NaCa_max; // microA_per_microF (in i_NaCa)
+double stim_amplitude; // microA_per_microF (in membrane)
+double stim_duration; // millisecond (in membrane)
+double stim_start; // millisecond (in membrane)
+double stim_period; // millisecond (in membrane)
+double g_to_1; // milliS_per_microF (in i_to_1)
 
 double A0_bck; // dimensionless (in A0_bc)
 double Ampl_gain; // dimensionless (in Ampl_gai)
-double I_up_max; // picoA (in Ca_handling_by_the_SR)
-double Vol_rel; // nanolitre (in Ca_handling_by_the_SR)
-double Vol_up; // nanolitre (in Ca_handling_by_the_SR)
-double alpha_rel; // picoA_per_millimolar (in Ca_handling_by_the_SR)
-double k_F3; // per_second (in Ca_handling_by_the_SR)
-double k_cyca; // millimolar (in Ca_handling_by_the_SR)
-double k_rel; // millimolar (in Ca_handling_by_the_SR)
-double k_srca; // millimolar (in Ca_handling_by_the_SR)
-double k_xcs; // dimensionless (in Ca_handling_by_the_SR)
-double tau_tr; // second (in Ca_handling_by_the_SR)
-double g_to; // nanoS (in Ca_independent_transient_outward_K_current)
+double CT_K_Cl_max; // millimolar_per_millisecond (in CT_K_Cl)
+double CT_Na_Cl_max; // millimolar_per_millisecond (in CT_Na_Cl)
+double CSQN_max; // millimolar (in Ca_JSR)
+double km_CSQN; // millimolar (in Ca_JSR)
+double Ca_MK_0; // dimensionless (in Ca_MK_act)
+double alpha_Ca_MK; // per_millisecond (in Ca_MK_act)
+double beta_Ca_MK; // per_millisecond (in Ca_MK_act)
+double km_Ca_MK; // millimolar (in Ca_MK_act)
+double CMDN_max; // millimolar (in Ca_i)
+double TRPN_max; // millimolar (in Ca_i)
+double km_CMDN; // millimolar (in Ca_i)
+double km_TRPN; // millimolar (in Ca_i)
+double b_SL_max; // millimolar (in Ca_r)
+double b_SR_max; // millimolar (in Ca_r)
+double km_b_SL; // millimolar (in Ca_r)
+double km_b_SR; // millimolar (in Ca_r)
+double tau_ss; // millisecond (in Ca_r)
 double Cext; // picoF (in Cex)
 double E_l; // millivolt (in E_)
 double I; // dimensionless (in )
-double E_Ca_app; // millivolt (in L_type_Ca_channel)
-double g_Ca_L; // nanoS (in L_type_Ca_channel)
-double d_NaCa; // per_millimolar_4 (in Na_Ca_ion_exchanger_current)
-double gamma; // dimensionless (in Na_Ca_ion_exchanger_current)
-double k_NaCa; // picoA_per_millimolar_4 (in Na_Ca_ion_exchanger_current)
 double R_seal; // ohm (in R_sea)
 double Scale_bck; // dimensionless (in Scale_bc)
 double Scaling; // dimensionless (in Scalin)
-double E_Ca_T; // millivolt (in T_type_Ca_channel)
-double g_Ca_T; // nanoS (in T_type_Ca_channel)
-double g_B_Ca; // nanoS (in background_currents)
-double g_B_Na; // nanoS (in background_currents)
-double Ca_c; // millimolar (in cleft_space_ion_concentrations)
-double Na_c; // millimolar (in cleft_space_ion_concentrations)
-double Vol_c; // nanolitre (in cleft_space_ion_concentrations)
-double g_Kr; // nanoS (in delayed_rectifier_K_current)
-double g_Ks; // nanoS (in delayed_rectifier_K_current)
-double CT; // dimensionless (in environment)
-double Mg_i; // millimolar (in intracellular_Ca_buffering)
-double Vol_Ca; // nanolitre (in intracellular_ion_concentrations)
-double Vol_i; // nanolitre (in intracellular_ion_concentrations)
-double KmK1; // millimolar (in inward_rectifier)
-double g_K1; // nanoS (in inward_rectifier)
-double shiftK1; // millivolt (in inward_rectifier)
-double steepK1; // dimensionless (in inward_rectifier)
+double g_Cl_b; // milliS_per_microF (in background_currents)
+double g_K_b; // milliS_per_microF (in background_currents)
+double g_Na_b; // milliS_per_microF (in background_currents)
+double r_NaK; // dimensionless (in equilibrium_potentials)
+double g_Ca_T; // milliS_per_microF (in i_Ca_T)
+double i_Ca_p_max; // microA_per_microF (in i_Ca_p)
+double km_Ca_p; // millimolar (in i_Ca_p)
+double g_K_p; // milliS_per_microF (in i_K_p)
+double X_NaCa; // dimensionless (in i_NaCa)
+double k_sat; // dimensionless (in i_NaCa)
+double km_Ca_act; // millimolar (in i_NaCa)
+double km_Ca_i; // millimolar (in i_NaCa)
+double km_Ca_o; // millimolar (in i_NaCa)
+double km_Na_i_1; // millimolar (in i_NaCa)
+double km_Na_o; // millimolar (in i_NaCa)
+double g_NaK; // microA_per_microF (in i_NaK)
+double km_K_o; // millimolar (in i_NaK)
+double km_Na_i_2; // millimolar (in i_NaK)
+double g_Na_L; // milliS_per_microF (in i_Na_L)
+double km_to_2; // millimolar (in i_to_2_a_gate)
+double tau_a; // millisecond (in i_to_2_a_gate)
 double k_bck; // one_over_millivolt (in k_bc)
 double leak_comp_perc; // dimensionless (in leak_comp_per)
-double F; // coulomb_per_mole (in membrane)
-double R; // millijoule_per_mole_kelvin (in membrane)
-double T; // kelvin (in membrane)
-double stim_end; // second (in membrane)
-double i_CaP_max; // picoA (in sarcolemmal_calcium_pump_current)
-double k_CaP; // millimolar (in sarcolemmal_calcium_pump_current)
-double i_NaK_max; // picoA (in sodium_potassium_pump)
-double k_NaK_K; // millimolar (in sodium_potassium_pump)
-double k_NaK_Na; // millimolar (in sodium_potassium_pump)
+double stim_end; // millisecond (in membrane)
+double Cl_o; // millimolar (in model_parameters)
+double Cm; // microF_per_cm2 (in model_parameters)
+double F; // coulomb_per_mole (in model_parameters)
+double R; // joule_per_kilomole_kelvin (in model_parameters)
+double T; // kelvin (in model_parameters)
+double Vol_cell; // microlitre (in model_parameters)
+double length; // cm (in model_parameters)
+double radius; // cm (in model_parameters)
+double rcg; // dimensionless (in model_parameters)
+double z_Ca; // dimensionless (in model_parameters)
+double NSR_max; // millimolar (in q_leak)
+double tau_Ca_MK_max; // millisecond (in q_rel_ri_gate)
+double tau_ro; // millisecond (in q_rel_ro_gate)
+double tau_tr; // millisecond (in q_tr)
+double X_q_up; // dimensionless (in q_up)
+double dkm_plb_max; // millimolar (in q_up)
+double dq_up_Ca_MK_max; // dimensionless (in q_up)
+double km_up; // millimolar (in q_up)
 
 //------------------------------------------------------------------------------
 // Computed variables
 //------------------------------------------------------------------------------
 
-double O_Calse_orig_deriv; // 1 / second (in Ca_handling_by_the_SR)
+double CMDN; // dimensionless (in Ca_i)
+double TRPN; // dimensionless (in Ca_i)
+double b_myo; // dimensionless (in Ca_i)
+double Ca_MK_bound; // dimensionless (in Ca_MK_act)
+double Ca_MK_act; // dimensionless (in Ca_MK_act)
+double b_SL; // dimensionless (in Ca_r)
+double b_SR; // dimensionless (in Ca_r)
+double Ca_r_tot; // dimensionless (in Ca_r)
+double q_diff; // millimolar_per_millisecond (in Ca_r)
 double I_ext; // dimensionless (in I_ex)
-double PM; // dimensionless (in environment)
-double time; // second (in environment)
 double g_leak; // one_over_ohm (in g_lea)
-double O_TMgMg_orig_deriv; // 1 / second (in intracellular_Ca_buffering)
-double i_rel; // picoA (in Ca_handling_by_the_SR)
-double i_up; // picoA (in Ca_handling_by_the_SR)
-double r_inact; // per_second (in Ca_handling_by_the_SR)
-double F3_orig_deriv; // 1 / second (in Ca_handling_by_the_SR)
-double dOCdt; // per_second (in intracellular_Ca_buffering)
-double O_C_orig_deriv; // 1 / second (in intracellular_Ca_buffering)
-double dOTCdt; // per_second (in intracellular_Ca_buffering)
-double O_TC_orig_deriv; // 1 / second (in intracellular_Ca_buffering)
-double dOTMgCdt; // per_second (in intracellular_Ca_buffering)
-double O_TMgC_orig_deriv; // 1 / second (in intracellular_Ca_buffering)
-double i_tr; // picoA (in Ca_handling_by_the_SR)
-double Ca_rel_orig_deriv; // millimolar / second (in Ca_handling_by_the_SR)
-double Ca_up_orig_deriv; // millimolar / second (in Ca_handling_by_the_SR)
-double E_K; // millivolt (in Ca_independent_transient_outward_K_current)
-double E_Ca; // millivolt (in background_currents)
-double r_act; // per_second (in Ca_handling_by_the_SR)
-double F1_orig_deriv; // 1 / second (in Ca_handling_by_the_SR)
-double F2_orig_deriv; // 1 / second (in Ca_handling_by_the_SR)
-double i_sus; // picoA (in Ca_independent_transient_outward_K_current)
-double i_to; // picoA (in Ca_independent_transient_outward_K_current)
-double alpha_r; // per_second (in Ca_independent_transient_outward_K_current_r_gate)
-double beta_r; // per_second (in Ca_independent_transient_outward_K_current_r_gate)
-double r_infinity; // dimensionless (in Ca_independent_transient_outward_K_current_r_gate)
-double tau_r; // second (in Ca_independent_transient_outward_K_current_r_gate)
-double r_orig_deriv; // 1 / second (in Ca_independent_transient_outward_K_current_r_gate)
-double s1_infinity; // dimensionless (in Ca_independent_transient_outward_K_current_s1_gate)
-double tau_s1; // second (in Ca_independent_transient_outward_K_current_s1_gate)
-double s1_orig_deriv; // 1 / second (in Ca_independent_transient_outward_K_current_s1_gate)
-double s2_infinity; // dimensionless (in Ca_independent_transient_outward_K_current_s2_gate)
-double tau_s2; // second (in Ca_independent_transient_outward_K_current_s2_gate)
-double s2_orig_deriv; // 1 / second (in Ca_independent_transient_outward_K_current_s2_gate)
-double s3_infinity; // dimensionless (in Ca_independent_transient_outward_K_current_s3_gate)
-double tau_s3; // second (in Ca_independent_transient_outward_K_current_s3_gate)
-double s3_orig_deriv; // 1 / second (in Ca_independent_transient_outward_K_current_s3_gate)
-double d_prime; // dimensionless (in L_type_Ca_channel)
-double i_Ca_L; // picoA (in L_type_Ca_channel)
-double E10; // millivolt (in L_type_Ca_channel_d_L_gate)
-double alpha_d_L; // per_second (in L_type_Ca_channel_d_L_gate)
-double beta_d_L; // per_second (in L_type_Ca_channel_d_L_gate)
-double d_L_infinity; // dimensionless (in L_type_Ca_channel_d_L_gate)
-double tau_d_L; // second (in L_type_Ca_channel_d_L_gate)
-double d_L_orig_deriv; // 1 / second (in L_type_Ca_channel_d_L_gate)
-double E0_f_L; // millivolt (in L_type_Ca_channel_f_L_gate)
-double alpha_f_L; // per_second (in L_type_Ca_channel_f_L_gate)
-double beta_f_L; // per_second (in L_type_Ca_channel_f_L_gate)
-double f_L_infinity; // dimensionless (in L_type_Ca_channel_f_L_gate)
-double tau_f_L; // second (in L_type_Ca_channel_f_L_gate)
-double f_L_orig_deriv; // 1 / second (in L_type_Ca_channel_f_L_gate)
-double i_NaCa; // picoA (in Na_Ca_ion_exchanger_current)
-double i_Ca_T; // picoA (in T_type_Ca_channel)
-double E0_d_T; // millivolt (in T_type_Ca_channel_d_T_gate)
-double alpha_d_T; // per_second (in T_type_Ca_channel_d_T_gate)
-double beta_d_T; // per_second (in T_type_Ca_channel_d_T_gate)
-double d_T_infinity; // dimensionless (in T_type_Ca_channel_d_T_gate)
-double tau_d_T; // second (in T_type_Ca_channel_d_T_gate)
-double d_T_orig_deriv; // 1 / second (in T_type_Ca_channel_d_T_gate)
-double E0_f_T; // millivolt (in T_type_Ca_channel_f_T_gate)
-double alpha_f_T; // per_second (in T_type_Ca_channel_f_T_gate)
-double beta_f_T; // per_second (in T_type_Ca_channel_f_T_gate)
-double f_T_infinity; // dimensionless (in T_type_Ca_channel_f_T_gate)
-double tau_f_T; // second (in T_type_Ca_channel_f_T_gate)
-double f_T_orig_deriv; // 1 / second (in T_type_Ca_channel_f_T_gate)
-double i_B_Ca; // picoA (in background_currents)
-double i_Kr; // picoA (in delayed_rectifier_K_current)
-double i_Ks; // picoA (in delayed_rectifier_K_current)
-double alpha_p_a; // per_second (in delayed_rectifier_K_current_pa_gate)
-double beta_p_a; // per_second (in delayed_rectifier_K_current_pa_gate)
-double p_a_infinity; // dimensionless (in delayed_rectifier_K_current_pa_gate)
-double tau_p_a; // second (in delayed_rectifier_K_current_pa_gate)
-double p_a_orig_deriv; // 1 / second (in delayed_rectifier_K_current_pa_gate)
-double alpha_p_i; // per_second (in delayed_rectifier_K_current_pi_gate)
-double beta_p_i; // per_second (in delayed_rectifier_K_current_pi_gate)
-double p_i_infinity; // dimensionless (in delayed_rectifier_K_current_pi_gate)
-double tau_p_i; // second (in delayed_rectifier_K_current_pi_gate)
-double p_i_orig_deriv; // 1 / second (in delayed_rectifier_K_current_pi_gate)
-double alpha_z; // per_second (in delayed_rectifier_K_current_z_gate)
-double beta_z; // per_second (in delayed_rectifier_K_current_z_gate)
-double tau_z; // second (in delayed_rectifier_K_current_z_gate)
-double z_infinity; // dimensionless (in delayed_rectifier_K_current_z_gate)
-double z_orig_deriv; // 1 / second (in delayed_rectifier_K_current_z_gate)
+double tau_f_Ca; // millisecond (in i_Ca_L_f_Ca_gate)
+double i_Ca_p; // microA_per_microF (in i_Ca_p)
+double g_Ks; // milliS_per_microF (in i_Ks)
+double a_infinity; // dimensionless (in i_to_2_a_gate)
+double d_infinity; // dimensionless (in i_Ca_L_d_gate)
+double tau_d; // millisecond (in i_Ca_L_d_gate)
+double f2_infinity; // dimensionless (in i_Ca_L_f2_gate)
+double tau_f2; // millisecond (in i_Ca_L_f2_gate)
+double f_infinity; // dimensionless (in i_Ca_L_f_gate)
+double tau_f; // millisecond (in i_Ca_L_f_gate)
+double i_Ca_T; // microA_per_microF (in i_Ca_T)
+double alpha_b; // per_millisecond (in i_Ca_T_b_gate)
+double b_infinity; // dimensionless (in i_Ca_T_b_gate)
+double beta_b; // per_millisecond (in i_Ca_T_b_gate)
+double tau_b; // millisecond (in i_Ca_T_b_gate)
+double alpha_g; // per_millisecond (in i_Ca_T_g_gate)
+double beta_g; // per_millisecond (in i_Ca_T_g_gate)
+double g_infinity; // dimensionless (in i_Ca_T_g_gate)
+double tau_g; // millisecond (in i_Ca_T_g_gate)
+double kp; // dimensionless (in i_K_p)
+double rr_infinity; // dimensionless (in i_Kr)
+double tau_xr; // millisecond (in i_Kr_xr_gate)
+double xr_infinity; // dimensionless (in i_Kr_xr_gate)
+double tau_xs1; // millisecond (in i_Ks_xs1_gate)
+double xs1_infinity; // dimensionless (in i_Ks_xs1_gate)
+double tau_xs2; // millisecond (in i_Ks_xs2_gate)
+double xs2_infinity; // dimensionless (in i_Ks_xs2_gate)
+double h_L_infinity; // dimensionless (in i_Na_L_h_L_gate)
+double tau_h_L; // millisecond (in i_Na_L_h_L_gate)
+double alpha_m_L; // per_millisecond (in i_Na_L_m_L_gate)
+double beta_m_L; // per_millisecond (in i_Na_L_m_L_gate)
+double m_L_infinity; // dimensionless (in i_Na_L_m_L_gate)
+double tau_m_L; // millisecond (in i_Na_L_m_L_gate)
+double alpha_h; // per_millisecond (in i_Na_h_gate)
+double beta_h; // per_millisecond (in i_Na_h_gate)
+double h_infinity; // dimensionless (in i_Na_h_gate)
+double tau_h; // millisecond (in i_Na_h_gate)
+double alpha_j; // per_millisecond (in i_Na_j_gate)
+double beta_j; // per_millisecond (in i_Na_j_gate)
+double j_infinity; // dimensionless (in i_Na_j_gate)
+double tau_j; // millisecond (in i_Na_j_gate)
+double alpha_m; // per_millisecond (in i_Na_m_gate)
+double beta_m; // per_millisecond (in i_Na_m_gate)
+double m_infinity; // dimensionless (in i_Na_m_gate)
+double tau_m; // millisecond (in i_Na_m_gate)
 double i_bck; // dimensionless (in i_bc)
 double i_leak_comp; // dimensionless (in i_leak_com)
 double i_inj; // dimensionless (in i_in)
-double i_K1; // picoA (in inward_rectifier)
-double i_Stim; // picoA (in membrane)
-double i_CaP; // picoA (in sarcolemmal_calcium_pump_current)
-double Ca_i_orig_deriv; // millimolar / second (in intracellular_ion_concentrations)
-double E_Na; // millivolt (in sodium_current)
-double i_B_Na; // picoA (in background_currents)
-double alpha_h; // per_second (in sodium_current_h1_gate)
-double beta_h; // per_second (in sodium_current_h1_gate)
-double h_infinity; // dimensionless (in sodium_current_h1_gate)
-double tau_h1; // second (in sodium_current_h1_gate)
-double h1_orig_deriv; // 1 / second (in sodium_current_h1_gate)
-double tau_h2; // second (in sodium_current_h2_gate)
-double h2_orig_deriv; // 1 / second (in sodium_current_h2_gate)
-double E0_m; // millivolt (in sodium_current_m_gate)
-double alpha_m; // per_second (in sodium_current_m_gate)
-double beta_m; // per_second (in sodium_current_m_gate)
-double i_Na; // picoA (in sodium_current)
-double m_orig_deriv; // 1 / second (in sodium_current_m_gate)
-double i_p; // picoA (in sodium_potassium_pump)
-double K_c_orig_deriv; // millimolar / second (in cleft_space_ion_concentrations)
-double K_i_orig_deriv; // millimolar / second (in intracellular_ion_concentrations)
-double Na_i_orig_deriv; // millimolar / second (in intracellular_ion_concentrations)
-double V_orig_deriv; // millivolt / second (in membrane)
+double alpha_a; // per_millisecond (in i_to_1_a_gate)
+double beta_a; // per_millisecond (in i_to_1_a_gate)
+double a_infinity; // dimensionless (in i_to_1_a_gate)
+double tau_a; // millisecond (in i_to_1_a_gate)
+double alpha_i2; // per_millisecond (in i_to_1_i2_gate)
+double beta_i2; // per_millisecond (in i_to_1_i2_gate)
+double i2_infinity; // dimensionless (in i_to_1_i2_gate)
+double tau_i2; // millisecond (in i_to_1_i2_gate)
+double alpha_i; // per_millisecond (in i_to_1_i_gate)
+double beta_i; // per_millisecond (in i_to_1_i_gate)
+double i_infinity; // dimensionless (in i_to_1_i_gate)
+double tau_i; // millisecond (in i_to_1_i_gate)
+double i_to_2_max; // microA_per_microF (in i_to_2)
+double i_to_2; // microA_per_microF (in i_to_2)
+double i_stim; // microA_per_microF (in membrane)
+double i_Ca_b; // microA_per_microF (in background_currents)
+double i_Ca_L_max; // microA_per_microF (in i_Ca_L)
+double i_Ca_L; // microA_per_microF (in i_Ca_L)
+double f_Ca2_infinity; // dimensionless (in i_Ca_L_f_Ca2_gate)
+double tau_f_Ca2; // millisecond (in i_Ca_L_f_Ca2_gate)
+double f_Ca_infinity; // dimensionless (in i_Ca_L_f_Ca_gate)
+double dNaCa_1; // millimolar4 (in i_NaCa)
+double g_K1; // milliS_per_microF (in i_K1)
+double g_Kr; // milliS_per_microF (in i_Kr)
+double dNaCa_2; // millimolar4 (in i_NaCa)
+double sigma; // dimensionless (in i_NaK)
+double E_Cl; // millivolt (in equilibrium_potentials)
+double i_Cl_b; // microA_per_microF (in background_currents)
+double E_K; // millivolt (in equilibrium_potentials)
+double CT_K_Cl; // millimolar_per_millisecond (in CT_K_Cl)
+double i_K_b; // microA_per_microF (in background_currents)
+double E_Ks; // millivolt (in equilibrium_potentials)
+double E_Na; // millivolt (in equilibrium_potentials)
+double CT_Na_Cl; // millimolar_per_millisecond (in CT_Na_Cl)
+double i_Na_b; // microA_per_microF (in background_currents)
+double alpha_xK1; // dimensionless (in i_K1_xK1_gate)
+double beta_xK1; // dimensionless (in i_K1_xK1_gate)
+double xK1; // dimensionless (in i_K1_xK1_gate)
+double i_K1; // microA_per_microF (in i_K1)
+double i_K_p; // microA_per_microF (in i_K_p)
+double i_Kr; // microA_per_microF (in i_Kr)
+double i_Ks; // microA_per_microF (in i_Ks)
+double i_Na; // microA_per_microF (in i_Na)
+double i_NaCa; // microA_per_microF (in i_NaCa)
+double f_NaK; // dimensionless (in i_NaK)
+double i_NaK; // microA_per_microF (in i_NaK)
+double i_Na_L; // microA_per_microF (in i_Na_L)
+double i_to_1; // microA_per_microF (in i_to_1)
+double i_tot; // microA_per_microF (in membrane)
+double Vol_jsr; // microlitre (in model_parameters)
+double Vol_myo; // microlitre (in model_parameters)
+double Vol_nsr; // microlitre (in model_parameters)
+double Vol_ss; // microlitre (in model_parameters)
+double a_geo; // cm2 (in model_parameters)
+double a_cap; // cm2 (in model_parameters)
+double q_leak; // millimolar_per_millisecond (in q_leak)
+double vg; // dimensionless (in q_rel)
+double g_rel; // per_millisecond (in q_rel)
+double Ca_fac; // millimolar (in q_rel_ri_gate)
+double ri_infinity; // dimensionless (in q_rel_ri_gate)
+double tau_Ca_MK; // millisecond (in q_rel_ri_gate)
+double tau_ri; // millisecond (in q_rel_ri_gate)
+double q_rel; // millimolar_per_millisecond (in q_rel)
+double ro_infinity_JSR; // dimensionless (in q_rel_ro_gate)
+double ro_infinity; // dimensionless (in q_rel_ro_gate)
+double q_tr; // millimolar_per_millisecond (in q_tr)
+double dkm_plb; // millimolar (in q_up)
+double dq_up_Ca_MK; // dimensionless (in q_up)
+double q_up; // millimolar_per_millisecond (in q_up)
 
 
 //------------------------------------------------------------------------------
@@ -259,68 +306,70 @@ void init()
     // State variables
     //---------------------------------------------------------------------------
 
-    Y[0] = -80.0; // V (millivolt) (in membrane)
-    Y[1] = 0.01309; // m (dimensionless) (in sodium_current_m_gate)
-    Y[2] = 0.706; // h1 (dimensionless) (in sodium_current_h1_gate)
-    Y[3] = 0.61493; // h2 (dimensionless) (in sodium_current_h2_gate)
-    Y[4] = 3e-05; // d_L (dimensionless) (in L_type_Ca_channel_d_L_gate)
-    Y[5] = 0.99981; // f_L (dimensionless) (in L_type_Ca_channel_f_L_gate)
-    Y[6] = 0.00046; // d_T (dimensionless) (in T_type_Ca_channel_d_T_gate)
-    Y[7] = 0.30752; // f_T (dimensionless) (in T_type_Ca_channel_f_T_gate)
-    Y[8] = 6e-05; // r (dimensionless) (in Ca_independent_transient_outward_K_current_r_gate)
-    Y[9] = 0.5753; // s1 (dimensionless) (in Ca_independent_transient_outward_K_current_s1_gate)
-    Y[10] = 0.39871; // s2 (dimensionless) (in Ca_independent_transient_outward_K_current_s2_gate)
-    Y[11] = 0.57363; // s3 (dimensionless) (in Ca_independent_transient_outward_K_current_s3_gate)
-    Y[12] = 0.02032; // z (dimensionless) (in delayed_rectifier_K_current_z_gate)
-    Y[13] = 0.00016; // p_a (dimensionless) (in delayed_rectifier_K_current_pa_gate)
-    Y[14] = 0.76898; // p_i (dimensionless) (in delayed_rectifier_K_current_pi_gate)
-    Y[15] = 8.4; // Na_i (millimolar) (in intracellular_ion_concentrations)
-    Y[16] = 7.1e-05; // Ca_i (millimolar) (in intracellular_ion_concentrations)
-    Y[17] = 100.0; // K_i (millimolar) (in intracellular_ion_concentrations)
-    Y[18] = 0.029108; // O_C (dimensionless) (in intracellular_Ca_buffering)
-    Y[19] = 0.014071; // O_TC (dimensionless) (in intracellular_Ca_buffering)
-    Y[20] = 0.214036; // O_TMgC (dimensionless) (in intracellular_Ca_buffering)
-    Y[21] = 0.693565; // O_TMgMg (dimensionless) (in intracellular_Ca_buffering)
-    Y[22] = 5.0; // K_c (millimolar) (in cleft_space_ion_concentrations)
-    Y[23] = 0.726776; // Ca_rel (millimolar) (in Ca_handling_by_the_SR)
-    Y[24] = 0.730866; // Ca_up (millimolar) (in Ca_handling_by_the_SR)
-    Y[25] = 0.465921; // O_Calse (dimensionless) (in Ca_handling_by_the_SR)
-    Y[26] = 0.288039; // F1 (dimensionless) (in Ca_handling_by_the_SR)
-    Y[27] = 0.002262; // F2 (dimensionless) (in Ca_handling_by_the_SR)
-    Y[28] = 0.612697; // F3 (dimensionless) (in Ca_handling_by_the_SR)
+    Y[0] = -83.43812846286808; // V (millivolt) (in membrane)
+    Y[1] = 0.00022355433459434943; // Ca_i (millimolar) (in Ca_i)
+    Y[2] = 0.002003390432234504; // m (dimensionless) (in i_Na_m_gate)
+    Y[3] = 0.9786390933308567; // h (dimensionless) (in i_Na_h_gate)
+    Y[4] = 0.09866447258167589; // j (dimensionless) (in i_Na_j_gate)
+    Y[5] = 0.002003390432234504; // m_L (dimensionless) (in i_Na_L_m_L_gate)
+    Y[6] = 0.8946968372659203; // h_L (dimensionless) (in i_Na_L_h_L_gate)
+    Y[7] = 2.322223865147363e-06; // d (dimensionless) (in i_Ca_L_d_gate)
+    Y[8] = 0.9985607329462358; // f (dimensionless) (in i_Ca_L_f_gate)
+    Y[9] = 0.8173435436674658; // f2 (dimensionless) (in i_Ca_L_f2_gate)
+    Y[10] = 0.9610551285529658; // f_Ca (dimensionless) (in i_Ca_L_f_Ca_gate)
+    Y[11] = 0.868690796671854; // f_Ca2 (dimensionless) (in i_Ca_L_f_Ca2_gate)
+    Y[12] = 0.0002563937630984438; // b (dimensionless) (in i_Ca_T_b_gate)
+    Y[13] = 0.9720432601848331; // g (dimensionless) (in i_Ca_T_g_gate)
+    Y[14] = 0.0004238729429342389; // a (dimensionless) (in i_to_1_a_gate)
+    Y[15] = 0.9990935802459496; // i (dimensionless) (in i_to_1_i_gate)
+    Y[16] = 0.9777368439681764; // i2 (dimensionless) (in i_to_1_i2_gate)
+    Y[17] = 0.07084939408222911; // xr (dimensionless) (in i_Kr_xr_gate)
+    Y[18] = 0.0011737654433043125; // xs1 (dimensionless) (in i_Ks_xs1_gate)
+    Y[19] = 0.001179442867470093; // xs2 (dimensionless) (in i_Ks_xs2_gate)
+    Y[20] = 0.0014909437525000811; // a (dimensionless) (in i_to_2_a_gate)
+    Y[21] = 9.927155552932733; // Na_i (millimolar) (in intracellular_ion_concentrations)
+    Y[22] = 18.904682470140408; // Cl_i (millimolar) (in intracellular_ion_concentrations)
+    Y[23] = 141.9670801746057; // K_i (millimolar) (in intracellular_ion_concentrations)
+    Y[24] = 8.789168284782809e-06; // Ca_MK_trap (dimensionless) (in Ca_MK_act)
+    Y[25] = 1.2132524695849454; // Ca_NSR (millimolar) (in Ca_NSR)
+    Y[26] = 1.1433050636518596; // Ca_JSR (millimolar) (in Ca_JSR)
+    Y[27] = 0.00022418117117903934; // Ca_r (millimolar) (in Ca_r)
+    Y[28] = 0.7802870066567904; // ri (dimensionless) (in q_rel_ri_gate)
+    Y[29] = 1.2785734760674763e-09; // ro (dimensionless) (in q_rel_ro_gate)
 
     strcpy(YNames[0], "V");
-    strcpy(YNames[1], "m");
-    strcpy(YNames[2], "h1");
-    strcpy(YNames[3], "h2");
-    strcpy(YNames[4], "d_L");
-    strcpy(YNames[5], "f_L");
-    strcpy(YNames[6], "d_T");
-    strcpy(YNames[7], "f_T");
-    strcpy(YNames[8], "r");
-    strcpy(YNames[9], "s1");
-    strcpy(YNames[10], "s2");
-    strcpy(YNames[11], "s3");
-    strcpy(YNames[12], "z");
-    strcpy(YNames[13], "p_a");
-    strcpy(YNames[14], "p_i");
-    strcpy(YNames[15], "Na_i");
-    strcpy(YNames[16], "Ca_i");
-    strcpy(YNames[17], "K_i");
-    strcpy(YNames[18], "O_C");
-    strcpy(YNames[19], "O_TC");
-    strcpy(YNames[20], "O_TMgC");
-    strcpy(YNames[21], "O_TMgMg");
-    strcpy(YNames[22], "K_c");
-    strcpy(YNames[23], "Ca_rel");
-    strcpy(YNames[24], "Ca_up");
-    strcpy(YNames[25], "O_Calse");
-    strcpy(YNames[26], "F1");
-    strcpy(YNames[27], "F2");
-    strcpy(YNames[28], "F3");
+    strcpy(YNames[1], "Ca_i");
+    strcpy(YNames[2], "m");
+    strcpy(YNames[3], "h");
+    strcpy(YNames[4], "j");
+    strcpy(YNames[5], "m_L");
+    strcpy(YNames[6], "h_L");
+    strcpy(YNames[7], "d");
+    strcpy(YNames[8], "f");
+    strcpy(YNames[9], "f2");
+    strcpy(YNames[10], "f_Ca");
+    strcpy(YNames[11], "f_Ca2");
+    strcpy(YNames[12], "b");
+    strcpy(YNames[13], "g");
+    strcpy(YNames[14], "a");
+    strcpy(YNames[15], "i");
+    strcpy(YNames[16], "i2");
+    strcpy(YNames[17], "xr");
+    strcpy(YNames[18], "xs1");
+    strcpy(YNames[19], "xs2");
+    strcpy(YNames[20], "a");
+    strcpy(YNames[21], "Na_i");
+    strcpy(YNames[22], "Cl_i");
+    strcpy(YNames[23], "K_i");
+    strcpy(YNames[24], "Ca_MK_trap");
+    strcpy(YNames[25], "Ca_NSR");
+    strcpy(YNames[26], "Ca_JSR");
+    strcpy(YNames[27], "Ca_r");
+    strcpy(YNames[28], "ri");
+    strcpy(YNames[29], "ro");
 
     strcpy(YUnits[0], "millivolt");
-    strcpy(YUnits[1], "dimensionless");
+    strcpy(YUnits[1], "millimolar");
     strcpy(YUnits[2], "dimensionless");
     strcpy(YUnits[3], "dimensionless");
     strcpy(YUnits[4], "dimensionless");
@@ -334,20 +383,21 @@ void init()
     strcpy(YUnits[12], "dimensionless");
     strcpy(YUnits[13], "dimensionless");
     strcpy(YUnits[14], "dimensionless");
-    strcpy(YUnits[15], "millimolar");
-    strcpy(YUnits[16], "millimolar");
-    strcpy(YUnits[17], "millimolar");
+    strcpy(YUnits[15], "dimensionless");
+    strcpy(YUnits[16], "dimensionless");
+    strcpy(YUnits[17], "dimensionless");
     strcpy(YUnits[18], "dimensionless");
     strcpy(YUnits[19], "dimensionless");
     strcpy(YUnits[20], "dimensionless");
-    strcpy(YUnits[21], "dimensionless");
+    strcpy(YUnits[21], "millimolar");
     strcpy(YUnits[22], "millimolar");
     strcpy(YUnits[23], "millimolar");
-    strcpy(YUnits[24], "millimolar");
-    strcpy(YUnits[25], "dimensionless");
-    strcpy(YUnits[26], "dimensionless");
-    strcpy(YUnits[27], "dimensionless");
+    strcpy(YUnits[24], "dimensionless");
+    strcpy(YUnits[25], "millimolar");
+    strcpy(YUnits[26], "millimolar");
+    strcpy(YUnits[27], "millimolar");
     strcpy(YUnits[28], "dimensionless");
+    strcpy(YUnits[29], "dimensionless");
 
     //------------------------------------------------------------------------------
     // Constants
@@ -363,268 +413,299 @@ void init()
     Scaling = 1.0;
     k_bck = 0.098599999999999993;
     leak_comp_perc = 1.0;
-    Cm = 5.0000000000000002e-5;
-    stim_amplitude = -20.0;
-    stim_duration = 0.00020000000000000001;
-    stim_start = 0.01;
-    stim_period = 0.5;
+    q_leak_max = 0.0043750000000000004;
+    g_rel_max = 3000.0;
+    q_up_max = 0.0043750000000000004;
+    conc_clamp = 1.0;
+    Ca_o = 1.8;
+    K_o = 5.4000000000000004;
+    Na_o = 140.0;
+    g_Ca_L = 0.3392328;
+    g_Na = 8.0;
+    perc_reduced_inact_for_IpNa = 0;
+    shift_INa_inact = 0;
+    g_K1_max = 0.25;
+    g_Kr_max = 0.040008488000000002;
+    g_Ks_max = 0.052581329000000003;
+    i_NaCa_max = 4.5;
+    stim_amplitude = -80.0;
+    stim_duration = 1.0;
+    stim_start = 100.0;
+    stim_period = 800.0;
+    g_to_1 = 0.14135944;
 
     A0_bck = 1.0278;
     Ampl_gain = 1.0;
-    I_up_max = 2.7999999999999998;
-    Vol_rel = 4.3999999999999997e-8;
-    Vol_up = 3.9690000000000001e-7;
-    alpha_rel = 200.0;
-    k_F3 = 0.81499999999999995;
-    k_cyca = 0.00029999999999999997;
-    k_rel = 0.00029999999999999997;
-    k_srca = 0.5;
-    k_xcs = 0.40000000000000002;
-    tau_tr = 0.01;
-    g_to = 0.050001999999999998;
+    CT_K_Cl_max = 7.0755999999999996e-6;
+    CT_Na_Cl_max = 9.8442999999999999e-6;
+    CSQN_max = 10.0;
+    km_CSQN = 0.80000000000000004;
+    Ca_MK_0 = 0.050000000000000003;
+    alpha_Ca_MK = 0.050000000000000003;
+    beta_Ca_MK = 0.00068000000000000005;
+    km_Ca_MK = 0.14999999999999999;
+    CMDN_max = 0.050000000000000003;
+    TRPN_max = 0.070000000000000007;
+    km_CMDN = 0.0023800000000000002;
+    km_TRPN = 0.00050000000000000001;
+    b_SL_max = 1.1240000000000001;
+    b_SR_max = 0.047;
+    km_b_SL = 0.0086999999999999994;
+    km_b_SR = 0.00087000000000000001;
+    tau_ss = 0.20000000000000001;
     Cext = 1.0;
     E_l = 1.0;
     I = 1.0;
-    E_Ca_app = 50.0;
-    g_Ca_L = 0.0040000000000000001;
-    d_NaCa = 0.00029999999999999997;
-    gamma = 0.45000000000000001;
-    k_NaCa = 2.0000000000000002e-5;
     R_seal = 1.0;
     Scale_bck = 1.0;
     Scaling = 1.0;
-    E_Ca_T = 38.0;
-    g_Ca_T = 0.0060000000000000001;
-    g_B_Ca = 3.1000000000000001e-5;
-    g_B_Na = 6.3999999999999997e-5;
-    Ca_c = 2.5;
-    Na_c = 140.0;
-    Vol_c = 2.5000000000000002e-6;
-    g_Kr = 0.0035000000000000001;
-    g_Ks = 0.0025000000000000001;
-    CT = 1.0;
-    Mg_i = 2.5;
-    Vol_Ca = 5.8839999999999999e-6;
-    Vol_i = 1.26e-5;
-    KmK1 = 0.58999999999999997;
-    g_K1 = 0.0050800000000000003;
-    shiftK1 = -3.6000000000000001;
-    steepK1 = 1.393;
+    g_Cl_b = 0.00022499999999999999;
+    g_K_b = 0.0050000000000000001;
+    g_Na_b = 0.0025000000000000001;
+    r_NaK = 0.018329999999999999;
+    g_Ca_T = 0.13;
+    i_Ca_p_max = 0.057500000000000002;
+    km_Ca_p = 0.00050000000000000001;
+    g_K_p = 0.0027599999999999999;
+    X_NaCa = 0.40000000000000002;
+    k_sat = 0.27000000000000002;
+    km_Ca_act = 0.000125;
+    km_Ca_i = 0.0035999999999999999;
+    km_Ca_o = 1.3;
+    km_Na_i_1 = 12.300000000000001;
+    km_Na_o = 87.5;
+    g_NaK = 0.61875000000000002;
+    km_K_o = 1.5;
+    km_Na_i_2 = 10.0;
+    g_Na_L = 0.037374999999999999;
+    km_to_2 = 0.1502;
+    tau_a = 1.0;
     k_bck = 0.098599999999999993;
     leak_comp_perc = 1.0;
-    F = 96487.0;
+    stim_end = 100000.0;
+    Cl_o = 100.0;
+    Cm = 1.0;
+    F = 96485.0;
     R = 8314.0;
-    T = 308.0;
-    stim_end = 100.0;
-    i_CaP_max = 0.0095090000000000001;
-    k_CaP = 0.00020000000000000001;
-    i_NaK_max = 0.064409999999999995;
-    k_NaK_K = 1.0;
-    k_NaK_Na = 11.0;
+    T = 310.0;
+    Vol_cell = 0.34539999999999998;
+    length = 0.01;
+    radius = 0.0011000000000000001;
+    rcg = 2.0;
+    z_Ca = 2.0;
+    NSR_max = 15.0;
+    tau_Ca_MK_max = 10.0;
+    tau_ro = 3.0;
+    tau_tr = 120.0;
+    X_q_up = 0.5;
+    dkm_plb_max = 0.00017000000000000001;
+    dq_up_Ca_MK_max = 0.75;
+    km_up = 0.00092000000000000003;
 
 }
 
-void compute(double time_converted)
+void compute(double time)
 {
-   // time: time_converted (millisecond)
+   // time: time (millisecond)
 
-    O_Calse_orig_deriv = -400.0 * Y[25] + 480.0 * (1.0 - Y[25]) * Y[23];
-    dY[25] = 0.001 * O_Calse_orig_deriv;
+    CMDN = 2.0 * CMDN_max * Y[1] / pow((km_CMDN + Y[1]), 2);
+    TRPN = 2.0 * TRPN_max * Y[1] / pow((km_TRPN + Y[1]), 2);
+    b_myo = 1 / (1.0 + CMDN + TRPN);
+    Ca_MK_bound = (1.0 - Y[24]) * Ca_MK_0 / (1.0 + km_Ca_MK / Y[27]);
+    Ca_MK_act = Ca_MK_bound + Y[24];
+    b_SL = 2.0 * b_SL_max * Y[27] / pow((km_b_SL + Y[27]), 2);
+    b_SR = 2.0 * b_SR_max * Y[27] / pow((km_b_SR + Y[27]), 2);
+    Ca_r_tot = 1 / (1.0 + b_SL + b_SR);
+    q_diff = (-Y[1] + Y[27]) / tau_ss;
+    dY[24] = -beta_Ca_MK * Y[24] + (Ca_MK_bound + Y[24]) * Ca_MK_bound * alpha_Ca_MK;
     I_ext = I / (Ampl_gain * Cext);
-    PM = 0;
-    time = 0.001 * Y[29];
     g_leak = 1 / R_seal;
-    O_TMgMg_orig_deriv = -666.0 * Y[21] + 2000.0 * (1.0 - Y[20] - Y[21]) * Mg_i;
-    dY[21] = 0.001 * O_TMgMg_orig_deriv;
-    i_rel = pow(Y[27], 2) * (-Y[16] + Y[23]) * alpha_rel / pow((0.25 + Y[27]), 2);
-    i_up = (Y[16] / k_cyca - pow(k_xcs, 2) * Y[24] / k_srca) * I_up_max / ((k_cyca + Y[16]) / k_cyca + (k_srca + Y[24]) * k_xcs / k_srca);
-    r_inact = 33.960000000000001 + 339.60000000000002 * pow(Y[16], 4) / pow((k_rel + Y[16]), 4);
-    F3_orig_deriv = r_inact * Y[27] - k_F3 * Y[28];
-    dY[28] = 0.001 * F3_orig_deriv;
-    dOCdt = -476.0 * Y[18] + 200000.0 * (1.0 - Y[18]) * Y[16];
-    O_C_orig_deriv = dOCdt;
-    dY[18] = 0.001 * O_C_orig_deriv;
-    dOTCdt = -392.0 * Y[19] + 78400.0 * (1.0 - Y[19]) * Y[16];
-    O_TC_orig_deriv = dOTCdt;
-    dY[19] = 0.001 * O_TC_orig_deriv;
-    dOTMgCdt = -6.5999999999999996 * Y[20] + 200000.0 * (1.0 - Y[20] - Y[21]) * Y[16];
-    O_TMgC_orig_deriv = dOTMgCdt;
-    dY[20] = 0.001 * O_TMgC_orig_deriv;
-    i_tr = 2.0 * (-Y[23] + Y[24]) * Vol_rel * F / tau_tr;
-    Ca_rel_orig_deriv = -31.0 * O_Calse_orig_deriv + 0.5 * (-i_rel + i_tr) / (Vol_rel * F);
-    Ca_up_orig_deriv = 0.5 * (-i_tr + i_up) / (Vol_up * F);
-    dY[23] = 0.001 * Ca_rel_orig_deriv;
-    dY[24] = 0.001 * Ca_up_orig_deriv;
-    E_K = R * T * log(Y[22] / Y[17]) / F;
-    E_Ca = 0.5 * R * T * log(Ca_c / Y[16]) / F;
-    r_act = 240.0 * exp(-1.6000000000000001 + 0.080000000000000002 * Y[0]) + 203.80000000000001 * pow(Y[16], 4) / pow((k_rel + Y[16]), 4);
-    F1_orig_deriv = k_F3 * Y[28] - r_act * Y[26];
-    F2_orig_deriv = r_act * Y[26] - r_inact * Y[27];
-    if ((CT == 1.0) && (PM == 0))
-        i_sus = 0.098000000000000004 + 0.0014 * Y[0]
-    else if ((CT == 0) && (PM == 1.0))
-        i_sus = 0.16799999999999998 + 0.0023999999999999998 * Y[0]
+    tau_f_Ca = 0.5 + 1 / (1.0 + 333.33333333333331 * Y[27]) + 10.0 * Ca_MK_act / (Ca_MK_act + km_Ca_MK);
+    i_Ca_p = Y[1] * i_Ca_p_max / (Y[1] + km_Ca_p);
+    g_Ks = (1.0 + 0.59999999999999998 / (1.0 + 6.4818210260626455e-7 * pow((1 / Y[1]), 1.3999999999999999))) * g_Ks_max;
+    a_infinity = 1 / (1.0 + km_to_2 / Y[27]);
+    dY[20] = (-Y[20] + a_infinity) / tau_a;
+    d_infinity = 1 / (1.0 + exp(0.59347181008902072 - 0.14836795252225518 * Y[0]));
+    tau_d = 0.58999999999999997 + 0.80000000000000004 * exp(0.67599999999999993 + 0.051999999999999998 * Y[0]) / (1.0 + exp(1.7160000000000002 + 0.13200000000000001 * Y[0]));
+    dY[7] = (-Y[7] + d_infinity) / tau_d;
+    f2_infinity = 1 / (1.0 + exp(1.8 + 0.10000000000000001 * Y[0]));
+    tau_f2 = 38.0 + 24.217200000000005 * pow((-1 + 0.053763440860215048 * Y[0]), 2);
+    dY[9] = (-Y[9] + f2_infinity) / tau_f2;
+    f_infinity = 1 / (1.0 + exp(1.8 + 0.10000000000000001 * Y[0]));
+    tau_f = 4.0 + 0.03125 * pow((-1 + 0.40000000000000002 * Y[0]), 2);
+    dY[8] = (-Y[8] + f_infinity) / tau_f;
+    i_Ca_T = (-50.0 + Y[0]) * Y[12] * Y[13] * g_Ca_T;
+    alpha_b = 1.0680000000000001 * exp(0.54333333333333333 + 0.033333333333333333 * Y[0]);
+    b_infinity = 1 / (1.0 + exp(-5.4098360655737707 - 0.16393442622950821 * Y[0]));
+    beta_b = 1.0680000000000001 * exp(-0.54333333333333333 - 0.033333333333333333 * Y[0]);
+    tau_b = 1 / (alpha_b + beta_b);
+    dY[12] = (-Y[12] + b_infinity) / tau_b;
+    alpha_g = 0.014999999999999999 * exp(-0.86074429771908767 - 0.012004801920768308 * Y[0]);
+    beta_g = 0.014999999999999999 * exp(4.6558441558441563 + 0.064935064935064929 * Y[0]);
+    g_infinity = 1 / (1.0 + exp(9.0909090909090917 + 0.15151515151515152 * Y[0]));
+    tau_g = 1 / (alpha_g + beta_g);
+    dY[13] = (-Y[13] + g_infinity) / tau_g;
+    kp = 1 / (1.0 + exp(1.2521739130434781 - 0.16722408026755853 * Y[0]));
+    rr_infinity = 1 / (1.0 + exp(-0.26470588235294124 + 0.049019607843137261 * Y[0]));
+    tau_xr = 100.0 + 900.0 / (1.0 + exp(0.20000000000000001 * Y[0]));
+    xr_infinity = 1 / (1.0 + exp(-0.0069387755102040824 - 0.081632653061224483 * Y[0]));
+    dY[17] = (-Y[17] + xr_infinity) / tau_xr;
+    tau_xs1 = 1 / (((abs(44.600000000000001 + Y[0]) < 1.0030090258350555e-8) ? (7.6328986866047728e-13 / (1.0 - exp(-9.9999999875755032e-8)) - 49850000.061936118 * (44.599999989969909 + Y[0]) * (-7.6328986866047728e-13 / (1.0 - exp(9.9999999875755032e-8)) - 7.6328986866047728e-13 / (1.0 - exp(-9.9999999875755032e-8)))) : (7.6100000000000007e-5 * (44.600000000000001 + Y[0]) / (1.0 - exp(-444.66200000000003 - 9.9700000000000006 * Y[0])))) + ((abs(-0.55000000000000004 + Y[0]) < 7.8124999999948028e-7) ? (-2.8124999999965681e-10 / (-1.0 + exp(-9.999999999987797e-8)) + 640000.00000042573 * (-0.54999921875000002 + Y[0]) * (2.8124999999996902e-10 / (-1.0 + exp(9.9999999999988984e-8)) + 2.8124999999965681e-10 / (-1.0 + exp(-9.999999999987797e-8)))) : (0.00036000000000000002 * (-0.55000000000000004 + Y[0]) / (-1.0 + exp(-0.070400000000000004 + 0.128 * Y[0])))));
+    xs1_infinity = 1 / (1.0 + exp(0.65693430656934315 - 0.072992700729927015 * Y[0]));
+    dY[18] = (-Y[18] + xs1_infinity) / tau_xs1;
+    tau_xs2 = 2.0 / (((abs(44.600000000000001 + Y[0]) < 1.0030090258350555e-8) ? (7.6328986866047728e-13 / (1.0 - exp(-9.9999999875755032e-8)) - 49850000.061936118 * (44.599999989969909 + Y[0]) * (-7.6328986866047728e-13 / (1.0 - exp(9.9999999875755032e-8)) - 7.6328986866047728e-13 / (1.0 - exp(-9.9999999875755032e-8)))) : (7.6100000000000007e-5 * (44.600000000000001 + Y[0]) / (1.0 - exp(-444.66200000000003 - 9.9700000000000006 * Y[0])))) + ((abs(-0.55000000000000004 + Y[0]) < 7.8124999999948028e-7) ? (-2.8124999999965681e-10 / (-1.0 + exp(-9.999999999987797e-8)) + 640000.00000042573 * (-0.54999921875000002 + Y[0]) * (2.8124999999996902e-10 / (-1.0 + exp(9.9999999999988984e-8)) + 2.8124999999965681e-10 / (-1.0 + exp(-9.999999999987797e-8)))) : (0.00036000000000000002 * (-0.55000000000000004 + Y[0]) / (-1.0 + exp(-0.070400000000000004 + 0.128 * Y[0])))));
+    xs2_infinity = 1 / (1.0 + exp(0.65693430656934315 - 0.072992700729927015 * Y[0]));
+    dY[19] = (-Y[19] + xs2_infinity) / tau_xs2;
+    h_L_infinity = 1 / (1.0 + exp(11.311475409836067 + 0.16393442622950821 * Y[0]));
+    tau_h_L = 175.0 + 125.0 / (1.0 + exp(-4.166666666666667 - 0.16666666666666666 * Y[0]));
+    dY[6] = (-Y[6] + h_L_infinity) / tau_h_L;
+    if (abs(47.130000000000003 + Y[0]) < 1.0000000000287557e-6)
+        alpha_m_L = 3.200000000092018e-7 / (1.0 - exp(-1.0000000000287557e-7)) - 499999.99998562218 * (47.129999000000005 + Y[0]) * (-3.200000000092018e-7 / (1.0 - exp(1.0000000000287557e-7)) - 3.200000000092018e-7 / (1.0 - exp(-1.0000000000287557e-7)))
     else 
-        i_sus = 0.070000000000000007 + 0.001 * Y[0]
+        alpha_m_L = 0.32000000000000001 * (47.130000000000003 + Y[0]) / (1.0 - exp(-4.7130000000000001 - 0.10000000000000001 * Y[0]))
 
-    if ((CT == 1.0) && (PM == 0))
-        i_to = 0.20000000000000001 * (0.40000000000000002 + 0.59999999999999998 * pow(Y[11], 6)) * (-E_K + Y[0]) * (0.58999999999999997 * pow(Y[9], 3) + 0.40999999999999998 * pow(Y[10], 3)) * g_to * Y[8]
-    else if ((CT == 0) && (PM == 1.0))
-        i_to = 0.34999999999999998 * (0.40000000000000002 + 0.59999999999999998 * pow(Y[11], 6)) * (-E_K + Y[0]) * (0.58999999999999997 * pow(Y[9], 3) + 0.40999999999999998 * pow(Y[10], 3)) * g_to * Y[8]
+    beta_m_L = 0.080000000000000002 * exp(-0.090909090909090912 * Y[0]);
+    m_L_infinity = alpha_m_L / (alpha_m_L + beta_m_L);
+    tau_m_L = 1 / (alpha_m_L + beta_m_L);
+    dY[5] = (-Y[5] + m_L_infinity) / tau_m_L;
+    if (Y[0] < -40.0)
+        alpha_h = 0.13500000000000001 * exp(-11.764705882352942 + 0.14705882352941177 * shift_INa_inact - 0.14705882352941177 * Y[0])
     else 
-        i_to = (0.40000000000000002 + 0.59999999999999998 * pow(Y[11], 6)) * (-E_K + Y[0]) * (0.58999999999999997 * pow(Y[9], 3) + 0.40999999999999998 * pow(Y[10], 3)) * g_to * Y[8]
+        alpha_h = 0
 
-    alpha_r = 386.60000000000002 * exp(0.083333333333333329 * Y[0]);
-    beta_r = 8.0109999999999992 * exp(-0.1388888888888889 * Y[0]);
-    r_infinity = 1 / (1.0 + exp(-2.6628794603230959 - 0.17752529735487307 * Y[0]));
-    tau_r = 0.00040000000000000002 + 1 / (alpha_r + beta_r);
-    r_orig_deriv = (-Y[8] + r_infinity) / tau_r;
-    s1_infinity = 1 / (1.0 + exp(4.0070821529745047 + 0.14164305949008499 * Y[0]));
-    tau_s1 = 0.020400000000000001 + 0.54659999999999997 / (1.0 + exp(327.99999999999994 + 10.0 * Y[0]));
-    s1_orig_deriv = (-Y[9] + s1_infinity) / tau_s1;
-    s2_infinity = 1 / (1.0 + exp(4.0070821529745047 + 0.14164305949008499 * Y[0]));
-    tau_s2 = 5.75 / (1.0 + exp(327.99999999999994 + 10.0 * Y[0])) + 0.45000000000000001 / (1.0 + exp(0.96921975662133131 - 0.071581961345740866 * Y[0]));
-    s2_orig_deriv = (-Y[10] + s2_infinity) / tau_s2;
-    s3_infinity = 0.39975990396158467 + 0.60024009603841544 / (1.0 + exp(1.8506208911614319 + 0.036523009495982472 * Y[0]));
-    tau_s3 = 0.5 + 7.5 / (1.0 + exp(46.0 + 2.0 * Y[0]));
-    s3_orig_deriv = (-Y[11] + s3_infinity) / tau_s3;
-    dY[26] = 0.001 * F1_orig_deriv;
-    dY[27] = 0.001 * F2_orig_deriv;
-    dY[8] = 0.001 * r_orig_deriv;
-    dY[9] = 0.001 * s1_orig_deriv;
-    dY[10] = 0.001 * s2_orig_deriv;
-    dY[11] = 0.001 * s3_orig_deriv;
-    d_prime = 1 / (1.0 + exp(1.9166666666666667 - 0.083333333333333329 * Y[0]));
-    if ((CT == 1.0) && (PM == 0))
-        i_Ca_L = 1.8 * (-E_Ca_app + Y[0]) * (Y[4] * Y[5] + d_prime) * g_Ca_L
-    else if ((CT == 0) && (PM == 1.0))
-        i_Ca_L = 2.1000000000000001 * (-E_Ca_app + Y[0]) * (Y[4] * Y[5] + d_prime) * g_Ca_L
+    if (Y[0] < -40.0)
+        beta_h = 310000.0 * exp(0.34999999999999998 * Y[0] - 0.34999999999999998 * shift_INa_inact) + 3.5600000000000001 * exp(0.079000000000000001 * Y[0] - 0.079000000000000001 * shift_INa_inact)
     else 
-        i_Ca_L = (-E_Ca_app + Y[0]) * (Y[4] * Y[5] + d_prime) * g_Ca_L
+        beta_h = 7.6923076923076916 / (1.0 + exp(-0.96036036036036043 + 0.0900900900900901 * shift_INa_inact - 0.0900900900900901 * Y[0]))
 
-    E10 = 10.0 + Y[0];
-    alpha_d_L = ((abs(10.0 + Y[0]) < 4.8080000000089163e-7) ? (-2.4039999999697637e-5 / (-1.0 + exp(-9.9999999998742257e-8)) - 1039933.4442576389 * (9.9999995191999993 + Y[0]) * (2.4040000000391526e-5 / (-1.0 + exp(1.0000000000162864e-7)) + 2.4039999999697637e-5 / (-1.0 + exp(-9.9999999998742257e-8)))) : (-50.0 * (10.0 + Y[0]) / (-1.0 + exp(-2.0798668885191347 - 0.20798668885191349 * Y[0])))) + ((abs(45.0 + Y[0]) < 2.5000000000718892e-7) ? (-4.1800000005842713e-6 / (-1.0 + exp(-1.000000000139778e-7)) - 1999999.9999424887 * (44.999999750000001 + Y[0]) * (4.1800000005842713e-6 / (-1.0 + exp(-1.000000000139778e-7)) + 4.1799999996561256e-6 / (-1.0 + exp(9.9999999991773334e-8)))) : (-16.719999999999999 * (45.0 + Y[0]) / (-1.0 + exp(-18.0 - 0.40000000000000002 * Y[0]))));
-    if (abs(5.0 + Y[0]) < 2.5000000000025002e-7)
-        beta_d_L = -1.1200000000011203e-6 / (-1.0 + exp(-1.0000000000010001e-7)) + 1999999.9999979998 * (5.0000002500000003 + Y[0]) * (1.1200000000011203e-6 / (-1.0 + exp(1.0000000000010001e-7)) + 1.1200000000011203e-6 / (-1.0 + exp(-1.0000000000010001e-7)))
+    h_infinity = 0.01 * perc_reduced_inact_for_IpNa + (1.0 - 0.01 * perc_reduced_inact_for_IpNa) * alpha_h / (alpha_h + beta_h);
+    tau_h = 1 / (alpha_h + beta_h);
+    dY[3] = (-Y[3] + h_infinity) / tau_h;
+    if (Y[0] < -40.0)
+        alpha_j = (37.780000000000001 + Y[0]) * (-127140.0 * exp(0.24440000000000001 * Y[0] - 0.24440000000000001 * shift_INa_inact) - 3.4740000000000003e-5 * exp(0.043909999999999998 * shift_INa_inact - 0.043909999999999998 * Y[0])) / (1.0 + exp(24.640530000000002 + 0.311 * Y[0] - 0.311 * shift_INa_inact))
     else 
-        beta_d_L = 4.4800000000000004 * (5.0 + Y[0]) / (-1.0 + exp(2.0 + 0.40000000000000002 * Y[0]))
+        alpha_j = 0
 
-    d_L_infinity = 1 / (1.0 + exp(-0.14393939393939395 - 0.15151515151515152 * E10));
-    tau_d_L = 1 / (alpha_d_L + beta_d_L);
-    d_L_orig_deriv = (-Y[4] + d_L_infinity) / tau_d_L;
-    dY[4] = 0.001 * d_L_orig_deriv;
-    E0_f_L = 18.0 + Y[0];
-    if (abs(18.0 + Y[0]) < 4.0000000001150227e-7)
-        alpha_f_L = -3.3960000000976542e-6 / (-1.0 + exp(-1.0000000000287557e-7)) + 1249999.9999640554 * (18.000000400000001 + Y[0]) * (3.3960000000976542e-6 / (-1.0 + exp(1.0000000000287557e-7)) + 3.3960000000976542e-6 / (-1.0 + exp(-1.0000000000287557e-7)))
+    if (Y[0] < -40.0)
+        beta_j = 0.1212 * exp(0.01052 * shift_INa_inact - 0.01052 * Y[0]) / (1.0 + exp(-5.5312920000000005 + 0.13780000000000001 * shift_INa_inact - 0.13780000000000001 * Y[0]))
     else 
-        alpha_f_L = 8.4900000000000002 * (18.0 + Y[0]) / (-1.0 + exp(4.5 + 0.25 * Y[0]))
+        beta_j = 0.29999999999999999 * exp(2.5349999999999999e-7 * shift_INa_inact - 2.5349999999999999e-7 * Y[0]) / (1.0 + exp(-3.2000000000000002 + 0.10000000000000001 * shift_INa_inact - 0.10000000000000001 * Y[0]))
 
-    beta_f_L = 67.921999999999997 / (1.0 + exp(-0.25 * E0_f_L));
-    f_L_infinity = alpha_f_L / (alpha_f_L + beta_f_L);
-    tau_f_L = 1 / (alpha_f_L + beta_f_L);
-    f_L_orig_deriv = (-Y[5] + f_L_infinity) / tau_f_L;
-    dY[5] = 0.001 * f_L_orig_deriv;
-    i_NaCa = (pow(Y[15], 3) * Ca_c * exp(gamma * Y[0] * F / (R * T)) - pow(Na_c, 3) * Y[16] * exp((-1.0 + gamma) * Y[0] * F / (R * T))) * k_NaCa / (1.0 + (pow(Y[15], 3) * Ca_c + pow(Na_c, 3) * Y[16]) * d_NaCa);
-    i_Ca_T = (-E_Ca_T + Y[0]) * g_Ca_T * Y[6] * Y[7];
-    E0_d_T = 23.300000000000001 + Y[0];
-    alpha_d_T = 674.173 * exp(0.033333333333333333 * E0_d_T);
-    beta_d_T = 674.173 * exp(-0.033333333333333333 * E0_d_T);
-    d_T_infinity = 1 / (1.0 + exp(0.049180327868852458 - 0.16393442622950821 * E0_d_T));
-    tau_d_T = 1 / (alpha_d_T + beta_d_T);
-    d_T_orig_deriv = (-Y[6] + d_T_infinity) / tau_d_T;
-    dY[6] = 0.001 * d_T_orig_deriv;
-    E0_f_T = 75.0 + Y[0];
-    alpha_f_T = 9.6370000000000005 * exp(-0.012004801920768308 * E0_f_T);
-    beta_f_T = 9.6370000000000005 * exp(0.065019505851755519 * E0_f_T);
-    f_T_infinity = alpha_f_T / (alpha_f_T + beta_f_T);
-    tau_f_T = 1 / (alpha_f_T + beta_f_T);
-    f_T_orig_deriv = (-Y[7] + f_T_infinity) / tau_f_T;
-    dY[7] = 0.001 * f_T_orig_deriv;
-    if ((CT == 1.0) && (PM == 0))
-        i_B_Ca = 2.0000000000000002e-5 * Y[0] - 2.0000000000000002e-5 * E_Ca
-    else if ((CT == 0) && (PM == 1.0))
-        i_B_Ca = 3.0000000000000001e-5 * Y[0] - 3.0000000000000001e-5 * E_Ca
+    j_infinity = 0.01 * perc_reduced_inact_for_IpNa + (1.0 - 0.01 * perc_reduced_inact_for_IpNa) * alpha_j / (alpha_j + beta_j);
+    tau_j = 1 / (alpha_j + beta_j);
+    dY[4] = (-Y[4] + j_infinity) / tau_j;
+    if (abs(47.130000000000003 + Y[0]) < 1.0000000000287557e-6)
+        alpha_m = 3.200000000092018e-7 / (1.0 - exp(-1.0000000000287557e-7)) - 499999.99998562218 * (47.129999000000005 + Y[0]) * (-3.200000000092018e-7 / (1.0 - exp(1.0000000000287557e-7)) - 3.200000000092018e-7 / (1.0 - exp(-1.0000000000287557e-7)))
     else 
-        i_B_Ca = (-E_Ca + Y[0]) * g_B_Ca
+        alpha_m = 0.32000000000000001 * (47.130000000000003 + Y[0]) / (1.0 - exp(-4.7130000000000001 - 0.10000000000000001 * Y[0]))
 
-    i_Kr = (-E_K + Y[0]) * Y[13] * Y[14] * g_Kr;
-    i_Ks = (-E_K + Y[0]) * Y[12] * g_Ks;
-    alpha_p_a = 9.0 * exp(0.03941508020968823 * Y[0]);
-    beta_p_a = 1.3 * exp(-0.076769537847382163 * Y[0]);
-    p_a_infinity = 1 / (1.0 + exp(-0.68918918918918914 - 0.13513513513513511 * Y[0]));
-    tau_p_a = 1 / (alpha_p_a + beta_p_a);
-    p_a_orig_deriv = (-Y[13] + p_a_infinity) / tau_p_a;
-    dY[13] = 0.001 * p_a_orig_deriv;
-    alpha_p_i = 100.0 * exp(-0.018299935950224173 * Y[0]);
-    beta_p_i = 656.0 * exp(0.009420009985210585 * Y[0]);
-    p_i_infinity = 1 / (1.0 + exp(2.539728728905752 + 0.05358970648917756 * Y[0]));
-    tau_p_i = 1 / (alpha_p_i + beta_p_i);
-    p_i_orig_deriv = (-Y[14] + p_i_infinity) / tau_p_i;
-    dY[14] = 0.001 * p_i_orig_deriv;
-    alpha_z = 1.6599999999999999 * exp(0.014398433450440593 * Y[0]);
-    beta_z = 0.29999999999999999 * exp(-0.045816915605241454 * Y[0]);
-    tau_z = 0.059999999999999998 + 1 / (alpha_z + beta_z);
-    z_infinity = 1 / (1.0 + exp(0.065217391304347824 - 0.072463768115942032 * Y[0]));
-    z_orig_deriv = (-Y[12] + z_infinity) / tau_z;
-    dY[12] = 0.001 * z_orig_deriv;
+    beta_m = 0.080000000000000002 * exp(-0.090909090909090912 * Y[0]);
+    m_infinity = alpha_m / (alpha_m + beta_m);
+    tau_m = 1 / (alpha_m + beta_m);
+    dY[2] = (-Y[2] + m_infinity) / tau_m;
     i_bck = A0_bck * Scale_bck / ((1 + exp(-Y[0] * k_bck)) * Cext);
     i_leak_comp = (-E_l + Y[0]) * g_leak * leak_comp_perc / (100 * Cext);
     i_inj = (-i_bck - i_leak_comp + I_ext) * Scaling;
-    if ((CT == 1.0) && (PM == 0))
-        i_K1 = 2.0 * pow(Y[22], 3) * (-E_K + Y[0]) * g_K1 / ((1.0 + exp((-E_K - shiftK1 + Y[0]) * steepK1 * F / (R * T))) * pow((Y[22] + KmK1), 3))
-    else if ((CT == 0) && (PM == 1.0))
-        i_K1 = 2.5 * pow(Y[22], 3) * (-E_K + Y[0]) * g_K1 / ((1.0 + exp((-E_K - shiftK1 + Y[0]) * steepK1 * F / (R * T))) * pow((Y[22] + KmK1), 3))
+    alpha_a = 25.0 * exp(-3.7999999999999998 + 0.050000000000000003 * Y[0]) / (1.0 + exp(-3.7999999999999998 + 0.050000000000000003 * Y[0]));
+    beta_a = 25.0 * exp(-2.7000000000000002 - 0.050000000000000003 * Y[0]) / (1.0 + exp(-2.7000000000000002 - 0.050000000000000003 * Y[0]));
+    a_infinity = alpha_a / (alpha_a + beta_a);
+    tau_a = 1 / (alpha_a + beta_a);
+    dY[14] = (-Y[14] + a_infinity) / tau_a;
+    alpha_i2 = 0.0044200000000000003 / (1.0 + exp(1.7333333333333334 + 0.066666666666666666 * Y[0]));
+    beta_i2 = 0.050000000000000003 * exp(-0.66666666666666663 + 0.066666666666666666 * Y[0]) / (1.0 + exp(-0.66666666666666663 + 0.066666666666666666 * Y[0]));
+    i2_infinity = alpha_i2 / (alpha_i2 + beta_i2);
+    tau_i2 = 21.5 + 30.0 / (1.0 + exp(-2.5 + 0.10000000000000001 * Y[0]));
+    dY[16] = (-Y[16] + i2_infinity) / tau_i2;
+    alpha_i = 0.029999999999999999 / (1.0 + exp(1.6666666666666667 + 0.066666666666666666 * Y[0]));
+    beta_i = 0.10000000000000001 * exp(-2.6666666666666665 + 0.066666666666666666 * Y[0]) / (1.0 + exp(-2.6666666666666665 + 0.066666666666666666 * Y[0]));
+    i_infinity = alpha_i / (alpha_i + beta_i);
+    tau_i = 6.0 + 5.0 / (1.0 + exp(-1.6499999999999999 + 0.10000000000000001 * Y[0]));
+    dY[15] = (-Y[15] + i_infinity) / tau_i;
+    if (abs(Y[0]) < 2.6712338705498262e-6)
+        i_to_2_max = 187179.41753901311 * (2.6712338705498262e-6 + Y[0]) * (3.8593999999999993e-9 * (-100.0 * exp(9.9999999999999995e-8) + Y[22]) / (1.0 - exp(9.9999999999999995e-8)) + 3.8593999999999993e-9 * (-100.0 * exp(-9.9999999999999995e-8) + Y[22]) / (1.0 - exp(-9.9999999999999995e-8))) - 3.8593999999999993e-9 * (-100.0 * exp(-9.9999999999999995e-8) + Y[22]) / (1.0 - exp(-9.9999999999999995e-8))
     else 
-        i_K1 = pow(Y[22], 3) * (-E_K + Y[0]) * g_K1 / ((1.0 + exp((-E_K - shiftK1 + Y[0]) * steepK1 * F / (R * T))) * pow((Y[22] + KmK1), 3))
+        i_to_2_max = 0.0014448004881001341 * (-100.0 * exp(0.037435883507802616 * Y[0]) + Y[22]) * Y[0] / (1.0 - exp(0.037435883507802616 * Y[0]))
 
-    if ((time >= stim_start) && (time <= stim_end) && (stim_duration >= -stim_start - stim_period * floor((-stim_start + time) / stim_period) + time))
-        i_Stim = stim_amplitude
+    i_to_2 = 20.0 * Y[20] * i_to_2_max;
+    if ((Y[30] >= stim_start) && (Y[30] <= stim_end) && (stim_duration >= -stim_start - stim_period * floor((-stim_start + Y[30]) / stim_period) + Y[30]))
+        i_stim = stim_amplitude
     else 
-        i_Stim = 0
+        i_stim = 0
 
-    i_CaP = Y[16] * i_CaP_max / (Y[16] + k_CaP);
-    Ca_i_orig_deriv = -0.044999999999999998 * dOCdt - 0.080000000000000002 * dOTCdt - 0.16 * dOTMgCdt + 0.5 * (-i_up - i_Ca_L - i_Ca_T - i_B_Ca - i_CaP + 2.0 * i_NaCa + i_rel) / (Vol_Ca * F);
-    dY[16] = 0.001 * Ca_i_orig_deriv;
-    E_Na = R * T * log(Na_c / Y[15]) / F;
-    if ((CT == 1.0) && (PM == 0))
-        i_B_Na = 2.0000000000000002e-5 * Y[0] - 2.0000000000000002e-5 * E_Na
-    else if ((CT == 0) && (PM == 1.0))
-        i_B_Na = 3.0000000000000001e-5 * Y[0] - 3.0000000000000001e-5 * E_Na
+    if (abs(Y[0]) < 1.3356169352749131e-6)
+        i_Ca_b = 374358.83507802623 * (1.3356169352749131e-6 + Y[0]) * (3.8499135947999997e-9 * (-0.34100000000000003 * Ca_o + Y[1] * exp(9.9999999999999995e-8)) / (-1.0 + exp(9.9999999999999995e-8)) + 3.8499135947999997e-9 * (-0.34100000000000003 * Ca_o + Y[1] * exp(-9.9999999999999995e-8)) / (-1.0 + exp(-9.9999999999999995e-8))) - 3.8499135947999997e-9 * (-0.34100000000000003 * Ca_o + Y[1] * exp(-9.9999999999999995e-8)) / (-1.0 + exp(-9.9999999999999995e-8))
     else 
-        i_B_Na = (-E_Na + Y[0]) * g_B_Na
+        i_Ca_b = 0.0028824983370007683 * (-0.34100000000000003 * Ca_o + Y[1] * exp(0.074871767015605231 * Y[0])) * Y[0] / (-1.0 + exp(0.074871767015605231 * Y[0]))
 
-    alpha_h = 44.899999999999999 * exp(-12.010771992818672 - 0.17953321364452424 * Y[0]);
-    beta_h = 1491.0 / (1.0 + 323.30000000000001 * exp(-7.333333333333333 - 0.077519379844961239 * Y[0]));
-    h_infinity = alpha_h / (alpha_h + beta_h);
-    tau_h1 = 0.00014999999999999999 + 0.029999999999999999 / (1.0 + exp(6.666666666666667 + 0.16666666666666666 * Y[0]));
-    h1_orig_deriv = (-Y[2] + h_infinity) / tau_h1;
-    dY[2] = 0.001 * h1_orig_deriv;
-    tau_h2 = 0.00044999999999999999 + 0.12 / (1.0 + exp(30.0 + 0.5 * Y[0]));
-    h2_orig_deriv = (-Y[3] + h_infinity) / tau_h2;
-    dY[3] = 0.001 * h2_orig_deriv;
-    E0_m = 44.399999999999999 + Y[0];
-    if (abs(44.399999999999999 + Y[0]) < 1.2672999999963075e-6)
-        alpha_m = -0.00058295799999830145 / (-1.0 + exp(-9.9999999999708629e-8)) - 394539.57232025318 * (44.399998732699999 + Y[0]) * (0.00058295799999830145 / (-1.0 + exp(9.9999999999708629e-8)) + 0.00058295799999830145 / (-1.0 + exp(-9.9999999999708629e-8)))
+    if (abs(-15.0 + Y[0]) < 1.3356169352718439e-6)
+        i_Ca_L_max = 374358.83507888648 * (-14.999998664383064 + Y[0]) * (4.6891709999892238e-6 * (-0.34100000000000003 * Ca_o + Y[27] * exp(9.9999999999770198e-8)) / (-1.0 + exp(9.9999999999770198e-8)) + 4.6891709999892238e-6 * (-0.34100000000000003 * Ca_o + Y[27] * exp(-9.9999999999770198e-8)) / (-1.0 + exp(-9.9999999999770198e-8))) - 4.6891709999892238e-6 * (-0.34100000000000003 * Ca_o + Y[27] * exp(-9.9999999999770198e-8)) / (-1.0 + exp(-9.9999999999770198e-8))
     else 
-        alpha_m = -460.0 * (44.399999999999999 + Y[0]) / (-1.0 + exp(-3.5035114021936398 - 0.078907914463820727 * Y[0]))
+        i_Ca_L_max = 3.510865186083326 * (-15.0 + Y[0]) * (-0.34100000000000003 * Ca_o + Y[27] * exp(-1.1230765052340785 + 0.074871767015605231 * Y[0])) / (-1.0 + exp(-1.1230765052340785 + 0.074871767015605231 * Y[0]))
 
-    beta_m = 18400.0 * exp(-0.078907914463820727 * E0_m);
-    if (abs(Y[0]) < 2.6539450910485349e-6)
-        i_Na = 188398.77346612973 * (2.6539450910485349e-6 + Y[0]) * (1.8911451999999998e-6 * pow(Y[1], 3) * (-1.0 + exp(9.9999999999999995e-8 - log(140.0 / Y[15]))) * (0.36499999999999999 * Y[3] + 0.63500000000000001 * Y[2]) / (-1.0 + exp(9.9999999999999995e-8)) + 1.8911451999999998e-6 * pow(Y[1], 3) * (-1.0 + exp(-9.9999999999999995e-8 - log(140.0 / Y[15]))) * (0.36499999999999999 * Y[3] + 0.63500000000000001 * Y[2]) / (-1.0 + exp(-9.9999999999999995e-8))) - 1.8911451999999998e-6 * pow(Y[1], 3) * (-1.0 + exp(-9.9999999999999995e-8 - log(140.0 / Y[15]))) * (0.36499999999999999 * Y[3] + 0.63500000000000001 * Y[2]) / (-1.0 + exp(-9.9999999999999995e-8))
-    else 
-        i_Na = 0.71257887225271721 * pow(Y[1], 3) * (-1.0 + exp(0.037679754693225945 * Y[0] - log(140.0 / Y[15]))) * (0.36499999999999999 * Y[3] + 0.63500000000000001 * Y[2]) * Y[0] / (-1.0 + exp(0.037679754693225945 * Y[0]))
-
-    m_orig_deriv = (1.0 - Y[1]) * alpha_m - Y[1] * beta_m;
-    dY[1] = 0.001 * m_orig_deriv;
-    i_p = 1.6000000000000001 * pow(Y[15], 1.5) * Y[22] * i_NaK_max / ((1.5 + exp(-1.5 - 0.025000000000000001 * Y[0])) * (pow(Y[15], 1.5) + pow(k_NaK_Na, 1.5)) * (Y[22] + k_NaK_K));
-    K_c_orig_deriv = (-2.0 * i_p + i_sus + i_to + i_Kr + i_Ks + i_K1) / (Vol_c * F);
-    dY[22] = 0.001 * K_c_orig_deriv;
-    K_i_orig_deriv = (-i_sus - i_to - i_Kr - i_Ks - i_K1 + 2.0 * i_p) / (Vol_i * F);
-    dY[17] = 0.001 * K_i_orig_deriv;
-    Na_i_orig_deriv = (-i_B_Na - i_Na - 3.0 * i_NaCa - 3.0 * i_p) / (Vol_i * F);
-    dY[15] = 0.001 * Na_i_orig_deriv;
-    V_orig_deriv = -(i_sus + i_to + i_Ca_L + i_NaCa + i_Ca_T + i_B_Ca + i_B_Na + i_Kr + i_Ks + i_inj + i_K1 + i_Stim + i_CaP + i_Na + i_p) / Cm;
-    dY[0] = 0.001 * V_orig_deriv;
+    i_Ca_L = Y[10] * Y[11] * Y[7] * Y[8] * Y[9] * g_Ca_L * i_Ca_L_max;
+    f_Ca2_infinity = 1 / (1.0 - 100.0 * i_Ca_L);
+    tau_f_Ca2 = 125.0 + 300.0 / (1.0 + exp(-4.375 - 25.0 * i_Ca_L));
+    dY[11] = (-Y[11] + f_Ca2_infinity) / tau_f_Ca2;
+    f_Ca_infinity = 0.14999999999999999 + 0.55000000000000004 / (1.0 + 333.33333333333331 * Y[27]) + 0.29999999999999999 / (1.0 - 20.0 * i_Ca_L);
+    dY[10] = (-Y[10] + f_Ca_infinity) / tau_f_Ca;
+    dNaCa_1 = pow(Y[21], 3) * km_Ca_o + 1.5 * pow(km_Na_o, 3) * Y[1] + pow(km_Na_i_1, 3) * (1.0 + 1.5 * Y[1] / km_Ca_i) * Ca_o;
+    g_K1 = 0.43033148291193518 * sqrt(K_o) * g_K1_max;
+    g_Kr = 0.43033148291193518 * sqrt(K_o) * g_Kr_max;
+    dNaCa_2 = pow(Y[21], 3) * Ca_o + 1.5 * pow(Na_o, 3) * Y[1] + pow(Na_o, 3) * (1.0 + Y[21] / km_Na_i_1) * km_Ca_i;
+    sigma = -0.14285714285714285 + 0.14285714285714285 * exp(0.01485884101040119 * Na_o);
+    E_Cl = -R * T * log(Cl_o / Y[22]) / F;
+    i_Cl_b = (-E_Cl + Y[0]) * g_Cl_b;
+    E_K = R * T * log(K_o / Y[23]) / F;
+    CT_K_Cl = (-E_Cl + E_K) * CT_K_Cl_max / (87.825100000000006 - E_Cl + E_K);
+    i_K_b = (-E_K + Y[0]) * g_K_b;
+    E_Ks = R * T * log((r_NaK * Na_o + K_o) / (Y[21] * r_NaK + Y[23])) / F;
+    E_Na = R * T * log(Na_o / Y[21]) / F;
+    CT_Na_Cl = pow((-E_Cl + E_Na), 4) * CT_Na_Cl_max / (59494197.640692554 + pow((-E_Cl + E_Na), 4));
+    i_Na_b = (-E_Na + Y[0]) * g_Na_b;
+    alpha_xK1 = 1.02 / (1.0 + exp(-14.1227775 + 0.23849999999999999 * Y[0] - 0.23849999999999999 * E_K));
+    beta_xK1 = (0.49124000000000001 * exp(0.43983232 + 0.080320000000000003 * Y[0] - 0.080320000000000003 * E_K) + exp(-36.698642499999998 + 0.061749999999999999 * Y[0] - 0.061749999999999999 * E_K)) / (1.0 + exp(-2.4444678999999998 + 0.51429999999999998 * E_K - 0.51429999999999998 * Y[0]));
+    xK1 = alpha_xK1 / (alpha_xK1 + beta_xK1);
+    i_K1 = (0.0040000000000000001 + g_K1 * xK1) * (-E_K + Y[0]);
+    i_K_p = (-E_K + Y[0]) * g_K_p * kp;
+    i_Kr = (-E_K + Y[0]) * Y[17] * g_Kr * rr_infinity;
+    i_Ks = (-E_Ks + Y[0]) * Y[18] * Y[19] * g_Ks;
+    i_Na = pow(Y[2], 3) * (-E_Na + Y[0]) * (0.20000000000000001 * Y[4] + 0.80000000000000004 * Y[3]) * g_Na;
+    i_NaCa = (-1.5 * pow(Na_o, 3) * Y[1] * exp(-0.65000000000000002 * Y[0] * F / (R * T)) + pow(Y[21], 3) * X_NaCa * i_NaCa_max * Ca_o * exp(0.34999999999999998 * Y[0] * F / (R * T))) / ((1.0 + k_sat * exp(-0.65000000000000002 * Y[0] * F / (R * T))) * (1.0 + 0.44444444444444442 * pow(km_Ca_act, 2) / pow(Y[1], 2)) * (dNaCa_1 + dNaCa_2));
+    f_NaK = 1 / (1.0 + 0.1245 * exp(-0.10000000000000001 * Y[0] * F / (R * T)) + 0.036499999999999998 * sigma * exp(-Y[0] * F / (R * T)));
+    i_NaK = f_NaK * g_NaK * K_o / ((1.0 + pow(km_Na_i_2, 2) / pow(Y[21], 2)) * (km_K_o + K_o));
+    i_Na_L = pow(Y[5], 3) * (-E_Na + Y[0]) * Y[6] * g_Na_L;
+    i_to_1 = (-E_K + Y[0]) * (0.20000000000000001 * Y[16] + 0.80000000000000004 * Y[15]) * Y[14] * g_to_1;
+    i_tot = i_Ca_b + i_Cl_b + i_K_b + i_Na_b + i_Ca_L + i_Ca_T + i_Ca_p + i_K1 + i_K_p + i_Kr + i_Ks + i_Na + i_NaCa + i_NaK + i_Na_L + i_to_1 + i_to_2;
+    dY[0] = -i_inj - i_stim - i_tot;
+    Vol_jsr = 0.0047999999999999996 * Vol_cell;
+    Vol_myo = 0.68000000000000005 * Vol_cell;
+    Vol_nsr = 0.055199999999999999 * Vol_cell;
+    Vol_ss = 0.02 * Vol_cell;
+    a_geo = 6.2800000000000002 * pow(radius, 2) + 6.2800000000000002 * length * radius;
+    a_cap = a_geo * rcg;
+    dY[22] = (-(i_Cl_b + i_to_2) * Cm * a_cap / (F * Vol_myo) + CT_K_Cl + CT_Na_Cl) * conc_clamp;
+    dY[23] = (-(-2.0 * i_NaK + i_K_b + i_K1 + i_K_p + i_Kr + i_Ks + i_to_1) * Cm * a_cap / (F * Vol_myo) + CT_K_Cl) * conc_clamp;
+    dY[21] = (-(3.0 * i_NaCa + 3.0 * i_NaK + i_Na_b + i_Na + i_Na_L) * Cm * a_cap / (F * Vol_myo) + CT_Na_Cl) * conc_clamp;
+    q_leak = Y[25] * q_leak_max / NSR_max;
+    vg = 1 / (1.0 + exp(2.6000000000000001 + 0.20000000000000001 * g_Ca_L * i_Ca_L_max));
+    g_rel = g_rel_max * vg;
+    Ca_fac = 1 / (1.0 + exp(3.3333333333333335 + 66.666666666666671 * i_Ca_L));
+    ri_infinity = 1 / (1.0 + exp(-16.0 + 80.0 * Ca_fac + 40000.0 * Y[27]));
+    tau_Ca_MK = Ca_MK_act * tau_Ca_MK_max / (Ca_MK_act + km_Ca_MK);
+    tau_ri = 3.0 + (350.0 - tau_Ca_MK) / (1.0 + exp(-15.0 + 5000.0 * Y[27] + 15.0 * Ca_fac)) + tau_Ca_MK;
+    dY[28] = (-Y[28] + ri_infinity) / tau_ri;
+    q_rel = (-Y[27] + Y[26]) * Y[28] * Y[29] * g_rel;
+    dY[27] = (-q_diff + Vol_jsr * q_rel / Vol_ss - i_Ca_L * Cm * a_cap / (F * Vol_ss * z_Ca)) * Ca_r_tot;
+    ro_infinity_JSR = pow(Y[26], 1.8999999999999999) / (pow(Y[26], 1.8999999999999999) + 1644.6531773416521 * pow((Y[27] / (0.0028 + Y[27])), 1.8999999999999999));
+    ro_infinity = pow(i_Ca_L, 2) * ro_infinity_JSR / (1.0 + pow(i_Ca_L, 2));
+    dY[29] = (-Y[29] + ro_infinity) / tau_ro;
+    q_tr = (-Y[26] + Y[25]) / tau_tr;
+    dY[26] = (-q_rel + q_tr) / (1.0 + CSQN_max * km_CSQN / pow((km_CSQN + Y[26]), 2));
+    dkm_plb = Ca_MK_act * dkm_plb_max / (Ca_MK_act + km_Ca_MK);
+    dq_up_Ca_MK = Ca_MK_act * dq_up_Ca_MK_max / (Ca_MK_act + km_Ca_MK);
+    q_up = (1.0 + dq_up_Ca_MK) * Y[1] * X_q_up * q_up_max / (-dkm_plb + Y[1] + km_up);
+    dY[25] = -q_leak - Vol_jsr * q_tr / Vol_nsr + q_up;
+    dY[1] = -((-q_leak + q_up) * Vol_nsr / Vol_myo - q_diff * Vol_ss / Vol_myo + 0.5 * (-2.0 * i_NaCa + i_Ca_b + i_Ca_p) * Cm * a_cap / (F * Vol_myo)) * b_myo;
 }
 
 //==============================================================================

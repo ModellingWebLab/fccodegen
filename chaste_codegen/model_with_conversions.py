@@ -46,7 +46,6 @@ def load_model_with_conversions(model_file, use_modifiers=False, quiet=False, fi
 
 
 def add_conversions(model, use_modifiers=True, fix_singularities=True, skip_chaste_stimulus_conversion=False):
-
     # We are adding attributes to the model from cellmlmanip. This could break if the api changes
     # The check  below guards against this
     attrs_added = ('conversion_units', 'stimulus_units', 'time_variable', 'state_vars', 'membrane_voltage_var',
