@@ -14,7 +14,7 @@ from chaste_codegen._math_functions import exp_
 from chaste_codegen.model_with_conversions import (
     add_conversions,
     get_membrane_stimulus_current,
-    get_membrane_voltage_var,
+    get_membrane_voltage_var
 )
 from chaste_codegen.rush_larsen_model import RushLarsenModel
 
@@ -56,6 +56,7 @@ class RushLarsenLabview(RushLarsenModel):
             picoF = units.add_unit('picoF', 'farad / 1e12')
             one_over_mv = units.add_unit('one_over_millivolt', '1 / (volt * 1e-3)')
             one_over_ohm = units.add_unit('one_over_ohm', '1 / ohm')
+            millivolt = units.add_unit('millivolt', 'volt / 1e3')
 
             # add variables
             Scaling = model.add_variable('Scaling', units='dimensionless')
@@ -64,7 +65,7 @@ class RushLarsenLabview(RushLarsenModel):
             R_seal = model.add_variable('R_seal', units='ohm')
             g_leak = model.add_variable('g_leak', units=one_over_ohm)
             leak_comp_perc = model.add_variable('leak_comp_perc', units='dimensionless')
-            E_l = model.add_variable('E_l', units='millivolt')
+            E_l = model.add_variable('E_l', units=millivolt)
             A0_bck = model.add_variable('A0_bck', units='dimensionless')
             k_bck = model.add_variable('k_bck', units=one_over_mv)
             Scale_bck = model.add_variable('Scale_bck', units='dimensionless')
