@@ -20,31 +20,33 @@ from chaste_codegen._script_utils import write_file
 # Pycml generated BackwardEuler with lookup tables by default,
 # so we introduced BackwardEulerNoLut for the version without lookup table
 TRANSLATORS = OrderedDict(
-    [('normal', (cg.NormalChasteModel, 'FromCellML', '', True)),
-     ('cvode', (cg.CvodeChasteModel, 'FromCellMLCvode', 'Cvode', True)),
-     ('cvode-data-clamp', (cg.CvodeChasteModel, 'FromCellMLCvodeDataClamp', 'CvodeDataClamp', True)),
-     ('backward-euler', (cg.BackwardEulerModel, 'FromCellMLBackwardEulerNoLut', 'BackwardEulerNoLut', False)),
-     ('rush-larsen', (cg.RushLarsenModel, 'FromCellMLRushLarsen', 'RushLarsen', False)),
-     ('grl1', (cg.GeneralisedRushLarsenFirstOrderModel, 'FromCellMLGRL1', 'GRL1', False)),
-     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModel, 'FromCellMLGRL2', 'GRL2', False)),
-     ('rush-larsen-labview', (cg.RushLarsenLabview, '', '', False))])
+    [('normal', (cg.NormalChasteModel, 'FromCellML', '', True, '')),
+     ('cvode', (cg.CvodeChasteModel, 'FromCellMLCvode', 'Cvode', True, '')),
+     ('cvode-data-clamp', (cg.CvodeChasteModel, 'FromCellMLCvodeDataClamp', 'CvodeDataClamp', True, '')),
+     ('backward-euler', (cg.BackwardEulerModel, 'FromCellMLBackwardEulerNoLut', 'BackwardEulerNoLut', False, '')),
+     ('rush-larsen', (cg.RushLarsenModel, 'FromCellMLRushLarsen', 'RushLarsen', False, '')),
+     ('grl1', (cg.GeneralisedRushLarsenFirstOrderModel, 'FromCellMLGRL1', 'GRL1', False, '')),
+     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModel, 'FromCellMLGRL2', 'GRL2', False, '')),
+     ('rush-larsen-labview', (cg.RushLarsenLabview, '', '', False,
+                              ' in mastrcriptRT with added injection current(i_inj)')),
+     ('rush-larsen-C', (cg.RushLarsenC, '', '', False, ' in C with added injection current(i_inj)'))])
 
 TRANSLATORS_OPT = OrderedDict(
-    [('normal', (cg.OptChasteModel, 'FromCellMLOpt', 'Opt', True)),
-     ('cvode', (cg.OptCvodeChasteModel, 'FromCellMLCvodeOpt', 'CvodeOpt', True)),
-     ('cvode-data-clamp', (cg.OptCvodeChasteModel, 'FromCellMLCvodeDataClampOpt', 'CvodeDataClampOpt', True)),
-     ('backward-euler', (cg.BackwardEulerOptModel, 'FromCellMLBackwardEuler', 'BackwardEuler', False)),
-     ('rush-larsen', (cg.RushLarsenOptModel, 'FromCellMLRushLarsenOpt', 'RushLarsenOpt', False)),
-     ('grl1', (cg.GeneralisedRushLarsenFirstOrderModelOpt, 'FromCellMLGRL1Opt', 'GRL1', False)),
-     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModelOpt, 'FromCellMLGRL2Opt', 'GRL2', False))])
+    [('normal', (cg.OptChasteModel, 'FromCellMLOpt', 'Opt', True, '')),
+     ('cvode', (cg.OptCvodeChasteModel, 'FromCellMLCvodeOpt', 'CvodeOpt', True, '')),
+     ('cvode-data-clamp', (cg.OptCvodeChasteModel, 'FromCellMLCvodeDataClampOpt', 'CvodeDataClampOpt', True, '')),
+     ('backward-euler', (cg.BackwardEulerOptModel, 'FromCellMLBackwardEuler', 'BackwardEuler', False, '')),
+     ('rush-larsen', (cg.RushLarsenOptModel, 'FromCellMLRushLarsenOpt', 'RushLarsenOpt', False, '')),
+     ('grl1', (cg.GeneralisedRushLarsenFirstOrderModelOpt, 'FromCellMLGRL1Opt', 'GRL1', False, '')),
+     ('grl2', (cg.GeneralisedRushLarsenSecondOrderModelOpt, 'FromCellMLGRL2Opt', 'GRL2', False, ''))])
 
 TRANSLATORS_WITH_MODIFIERS = tuple('--' + t for t in TRANSLATORS if TRANSLATORS[t][3])
 
 
 # Store extensions we can use and how to use them, based on extension of given outfile
 EXTENSION_LOOKUP = {'.cellml': None, '': ('.cpp', '.hpp'), '.cpp': ('.cpp', '.hpp'),
-                    '.hpp': ('.cpp', '.hpp'), '.c': ('.c', '.h', '.txt'), '.h': ('.c', '.h', '.txt'),
-                    '.txt': ('.c', '.h', '.txt')}
+                    '.hpp': ('.cpp', '.hpp'), '.c': ('.c', '.h'), '.h': ('.c', '.h'),
+                    '.txt': (None, '.txt')}
 
 
 def print_default_lookup_params():
@@ -52,6 +54,10 @@ def print_default_lookup_params():
     for param in DEFAULT_LOOKUP_PARAMETERS:
         params += '--lookup-table %s' % (" ".join(map(str, param)))
     return params
+
+
+def skip_conversion(args):
+    return args.rush_larsen_labview or args.rush_larsen_C
 
 
 def process_command_line():
@@ -70,7 +76,7 @@ def process_command_line():
                                       'generated; if no model type is set, "normal" models are generated')
 
     for k in TRANSLATORS:
-        group.add_argument('--' + k, help='Generate ' + k + ' model type', action='store_true')
+        group.add_argument('--' + k, help='Generate ' + k + ' model type' + TRANSLATORS[k][4], action='store_true')
 
     group = parser.add_argument_group('Transformations', 'These options control which transformations '
                                       '(typically optimisations) are applied in the generated code')
@@ -161,11 +167,6 @@ def process_command_line():
             if args.opt and model_type in TRANSLATORS_OPT:
                 translators.append(TRANSLATORS_OPT[model_type])
 
-    if len(translators) == 0:
-        raise CodegenError('No translator available for ' + str(model_type) + ' opt' if args.opt else '')
-    elif len(translators) > 1 and args.rush_larsen_labview:
-        raise CodegenError('--rush-larsen-labview cannot be used in combination with other model convertion types')
-
     # An outfile cannot be set with multiple translations
     if args.outfile and len(translators) > 1:
         raise CodegenError("-o cannot be used when multiple model types have been selected!")
@@ -179,7 +180,11 @@ def process_command_line():
         # For the labview type don't want to convert stimulus!
         model = load_model_with_conversions(args.cellml_file, use_modifiers=args.modifiers, quiet=args.quiet,
                                             fix_singularities=not args.skip_ingularity_fixes,
-                                            skip_conversions=args.rush_larsen_labview)
+                                            skip_conversions=skip_conversion(args))
+
+    if len(translators) > 1 and skip_conversion(args):
+        raise CodegenError(('--rush-larsen-labview and --rush-larsen-C '
+                            'cannot be used in combination with other model convertion types'))
 
     for translator in translators:
         # Make sure modifiers are only passed to models which can generate them
@@ -203,7 +208,8 @@ def process_command_line():
         # generate code Based on parameters a different class of translator may be used
         get_files = []
         for ex in ext:
-            get_files.append(os.path.join(outfile_path, outfile_base + ex))
+            if ex is not None:
+                get_files.append(os.path.join(outfile_path, outfile_base + ex))
 
         if args.show_outputs:
             for file in get_files:

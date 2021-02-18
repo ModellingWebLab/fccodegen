@@ -44,6 +44,7 @@ from .generalised_rush_larsen_2_opt_model import GeneralisedRushLarsenSecondOrde
 from .model_with_conversions import add_conversions, load_model_with_conversions  # noqa
 from .normal_chaste_model import NormalChasteModel  # noqa
 from .opt_chaste_model import OptChasteModel  # noqa
+from .rush_larsen_labview import RushLarsenC  # noqa
 from .rush_larsen_labview import RushLarsenLabview  # noqa
 from .rush_larsen_model import RushLarsenModel  # noqa
 from .rush_larsen_opt_model import RushLarsenOptModel  # noqa
